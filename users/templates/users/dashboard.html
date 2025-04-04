@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Dashboard del Usuario</h2>
+            <hr>
+        </div>
+    </div>
+
+    <div class="row">
+        {% if user.profile.role.name == 'Administrador' %}
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Gestión de Usuarios</h5>
+                        <p class="card-text">Administra los usuarios y sus roles.</p>
+                        <a href="{% url 'manage_users' %}" class="btn btn-primary">Gestionar Usuarios</a>
+                    </div>
+                </div>
+            </div>
+        {% elif user.profile.role.name == 'Gestor de Proyectos' %}
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Proyectos</h5>
+                        <p class="card-text">Gestiona los proyectos y sus tareas.</p>
+                        <a href="{% url 'project_list' %}" class="btn btn-primary">Ver Proyectos</a>
+                    </div>
+                </div>
+            </div>
+        {% elif user.profile.role.name == 'Colaborador' %}
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Mis Tareas</h5>
+                        <p class="card-text">Revisa y completa tus tareas asignadas.</p>
+                        <a href="#" class="btn btn-primary">Ver Mis Tareas</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Recomendaciones</h5>
+                        <p class="card-text">Recomendaciones de tareas basadas en tus habilidades.</p>
+                        <a href="{% url 'recommendations' %}" class="btn btn-primary">Ver Recomendaciones</a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Análisis de Mercado</h5>
+                    <p class="card-text">Tendencias y análisis del mercado laboral.</p>
+                    <a href="{% url 'market_dashboard' %}" class="btn btn-primary">Ver Análisis</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Tendencias de Habilidades</h5>
+                    <p class="card-text">Predicciones de habilidades futuras.</p>
+                    <a href="{% url 'skill_trends' %}" class="btn btn-primary">Ver Tendencias</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

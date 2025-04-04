@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Tendencias de Habilidades</h2>
+  <ul>
+    {% for skill, data in skill_trends.items %}
+      <li>{{ skill }} - {{ data.total_occurrences }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
