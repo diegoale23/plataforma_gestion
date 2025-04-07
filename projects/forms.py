@@ -1,29 +1,42 @@
+# projects/forms.py
 from django import forms
-from .models import Project, Task, Skill
+from .models import Project, Task
+from users.models import Skill
 
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = ['name', 'description']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+        }
+        labels = {
+            'name': 'Nombre del Proyecto',
+            'description': 'Descripción',
+        }
 
 class TaskForm(forms.ModelForm):
-    assigned_to = forms.ModelMultipleChoiceField(
-        queryset=None,  # Se establece en __init__
-        widget=forms.CheckboxSelectMultiple,
-        required=False,
-        label="Asignado a"
-    )
-    required_skills = forms.ModelMultipleChoiceField(
-        queryset=Skill.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
-        required=False,
-        label="Habilidades Requeridas"
-    )
-
     class Meta:
         model = Task
         fields = ['project', 'title', 'description', 'status', 'priority', 'assigned_to', 'required_skills', 'deadline']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['assigned_to'].queryset = User.objects.all()  # Establecer queryset aquí
+        widgets = {
+            'project': forms.Select(attrs={'class': 'form-control'}),
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+            'status': forms.Select(attrs={'class': 'form-control'}),
+            'priority': forms.Select(attrs={'class': 'form-control'}),
+            'assigned_to': forms.SelectMultiple(attrs={'class': 'form-control'}),
+            'required_skills': forms.CheckboxSelectMultiple(),
+            'deadline': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+        }
+        labels = {
+            'project': 'Proyecto',
+            'title': 'Título de la Tarea',
+            'description': 'Descripción',
+            'status': 'Estado',
+            'priority': 'Prioridad',
+            'assigned_to': 'Asignado a',
+            'required_skills': 'Habilidades Requeridas',
+            'deadline': 'Fecha Límite',
+        }

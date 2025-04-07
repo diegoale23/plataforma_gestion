@@ -1,57 +1,120 @@
+<!-- market_analysis/templates/market_analysis/dashboard.html -->
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-  <h2>Dashboard de Análisis de Mercado</h2>
-  <canvas id="skillsChart" width="400" height="200"></canvas>
-  <canvas id="sourcesChart" width="400" height="200"></canvas>
+  <div class="container mt-5">
+    <div class="card">
+      <div class="card-header">
+        <h2>Análisis del Mercado Laboral</h2>
+      </div>
+      <div class="card-body">
+        <!-- Resumen de Ofertas -->
+        <div class="row mb-4">
+          <div class="col-md-4">
+            <div class="card text-center">
+              <div class="card-body">
+                <h5 class="card-title">Total de Ofertas</h5>
+                <p class="card-text">{{ total_offers }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card text-center">
+              <div class="card-body">
+                <h5 class="card-title">Ofertas Activas</h5>
+                <p class="card-text">{{ active_offers }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card text-center">
+              <div class="card-body">
+                <h5 class="card-title">Última Actualización</h5>
+                <p class="card-text">{{ last_scraped|date:"d/m/Y" }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
+        <!-- Gráfico de Habilidades Demandadas -->
+        <div class="mb-4">
+          <h3>Habilidades Más Demandadas</h3>
+          <canvas id="skillsChart" height="100"></canvas>
+        </div>
+
+        <!-- Tendencias de Habilidades (desde ai_engine) -->
+        {% if skill_trends %}
+          <div class="mb-4">
+            <h3>Tendencias de Habilidades (Próximo Mes)</h3>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Habilidad</th>
+                  <th>Ocurrencias Totales</th>
+                  <th>Puntuación Predicha</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for skill, data in skill_trends.items %}
+                  <tr>
+                    <td>{{ skill }}</td>
+                    <td>{{ data.total_occurrences }}</td>
+                    <td>{{ data.predicted_score|floatformat:2 }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% endif %}
+
+        <!-- Enlace para más detalles -->
+        <a href="{% url 'job_offer_list' %}" class="btn btn-primary">Ver Todas las Ofertas</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts para el gráfico -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    const skillsLabels = JSON.parse('{{ skills_labels_json|safe }}');
-    const skillsData = JSON.parse('{{ skills_data_json|safe }}');
-    const sourcesLabels = JSON.parse('{{ source_labels_json|safe }}');
-    const sourcesData = JSON.parse('{{ source_data_json|safe }}');
-
-    new Chart(document.getElementById('skillsChart'), {
-      type: 'bar',
-      data: {
-        labels: skillsLabels,
-        datasets: [{
-          label: 'Habilidades Más Demandadas',
-          data: skillsData,
-          backgroundColor: 'rgba(54, 162, 235, 0.2)',
-          borderColor: 'rgba(54, 162, 235, 1)',
-          borderWidth: 1
-        }]
-      }
-    });
-
-    new Chart(document.getElementById('sourcesChart'), {
-      type: 'pie',
-      data: {
-        labels: sourcesLabels,
-        datasets: [{
-          label: 'Ofertas por Fuente',
-          data: sourcesData,
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)'
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)'
-          ],
-          borderWidth: 1
-        }]
-      }
+    document.addEventListener('DOMContentLoaded', function () {
+      const ctx = document.getElementById('skillsChart').getContext('2d');
+      const skillsChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: [{% for skill in top_skills %}'{{ skill.name }}',{% endfor %}],
+          datasets: [{
+            label: 'Habilidades Demandadas',
+            data: [{% for skill in top_skills %}{{ skill.num_offers }},{% endfor %}],
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Número de Ofertas'
+              }
+            },
+            x: {
+              title: {
+                display: true,
+                text: 'Habilidades'
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top'
+            }
+          }
+        }
+      });
     });
   </script>
 {% endblock %}

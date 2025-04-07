@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="container mt-5">
+    <h2>Gestión de Usuarios</h2>
+    <a href="{% url 'create_user' %}" class="btn btn-success mb-3">Crear Nuevo Usuario</a>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Usuario</th>
+          <th>Email</th>
+          <th>Rol</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+          <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.profile.role.name|default:'Sin rol' }}</td>
+            <td>
+              <form method="post" class="d-inline">
+                {% csrf_token %}
+                <input type="hidden" name="user_id" value="{{ user.id }}">
+                <select name="new_role" class="form-select d-inline w-auto">
+                  {% for role in roles %}
+                    <option value="{{ role.id }}" {% if role == user.profile.role %}selected{% endif %}>
+                      {{ role.name }}
+                    </option>
+                  {% endfor %}
+                </select>
+                <button type="submit" name="action" value="update_role" class="btn btn-sm btn-primary">Actualizar</button>
+              </form>
+              <!-- Botón para abrir el modal de eliminación -->
+              <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ user.id }}">
+                Eliminar
+              </button>
+              <!-- Modal de confirmación -->
+              <div class="modal fade" id="deleteModal{{ user.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ user.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="deleteModalLabel{{ user.id }}">Confirmar Eliminación</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      ¿Estás seguro de que deseas eliminar al usuario "{{ user.username }}"? Esta acción no se puede deshacer.
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                      <form method="post" action="{% url 'confirm_delete_user' user.id %}" class="d-inline">
+                        {% csrf_token %}
+                        <input type="hidden" name="confirm" value="yes">
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <a href="{% url 'dashboard' %}" class="btn btn-secondary">Volver</a>
+  </div>
+{% endblock %}

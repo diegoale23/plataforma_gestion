@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="container mt-5">
+    <div class="card">
+      <div class="card-header">
+        <h2>{{ task.title }}</h2>
+      </div>
+      <div class="card-body">
+        <p><strong>Proyecto:</strong> <a href="{% url 'project_detail' task.project.id %}">{{ task.project.name }}</a></p>
+        <p><strong>Descripción:</strong> {{ task.description|default:"Sin descripción" }}</p>
+        <p><strong>Estado:</strong> {{ task.get_status_display }}</p>
+        <p><strong>Prioridad:</strong> {{ task.get_priority_display }}</p>
+        <p><strong>Fecha Límite:</strong> 
+          <span{% if task.is_overdue %} class="text-danger"{% endif %}>
+            {{ task.deadline|date:"d/m/Y"|default:"Sin definir" }}
+          </span>
+        </p>
+        <p><strong>Asignado a:</strong>
+          {% for user in task.assigned_to.all %}
+            {{ user.username }}{% if not forloop.last %}, {% endif %}
+          {% empty %}
+            Nadie asignado
+          {% endfor %}
+        </p>
+        <p><strong>Habilidades Requeridas:</strong>
+          {% for skill in task.required_skills.all %}
+            {{ skill.name }}{% if not forloop.last %}, {% endif %}
+          {% empty %}
+            Ninguna
+          {% endfor %}
+        </p>
+        <a href="{% url 'task_update' task.pk %}" class="btn btn-primary">Editar</a>
+        <a href="{% url 'task_delete' task.pk %}" class="btn btn-danger">Eliminar</a>
+        <a href="{% url 'task_list' %}" class="btn btn-secondary">Volver</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

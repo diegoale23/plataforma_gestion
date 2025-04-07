@@ -1,10 +1,35 @@
 {% extends 'base.html' %}
-
 {% block content %}
-  <h2>Tendencias de Habilidades</h2>
-  <ul>
-    {% for skill, data in skill_trends.items %}
-      <li>{{ skill }} - {{ data.total_occurrences }}</li>
-    {% endfor %}
-  </ul>
+  <div class="container mt-5">
+    <div class="card">
+      <div class="card-header">
+        <h2>Tendencias de Habilidades</h2>
+      </div>
+      <div class="card-body">
+        {% if skill_trends %}
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Habilidad</th>
+                <th>Ocurrencias Totales</th>
+                <th>Puntuación Predicha (30 días)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for skill, data in skill_trends.items %}
+                <tr>
+                  <td>{{ skill }}</td>
+                  <td>{{ data.total_occurrences }}</td>
+                  <td>{{ data.predicted_score|floatformat:2 }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p>No hay datos de tendencias de habilidades disponibles.</p>
+        {% endif %}
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Volver al Dashboard</a>
+      </div>
+    </div>
+  </div>
 {% endblock %}

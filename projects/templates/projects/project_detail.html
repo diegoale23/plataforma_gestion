@@ -1,12 +1,44 @@
 {% extends 'base.html' %}
-
 {% block content %}
-  <h2>{{ project.name }}</h2>
-  <p>{{ project.description }}</p>
-  <h3>Tareas:</h3>
-  <ul>
-    {% for task in project.tasks.all %}
-      <li>{{ task.title }} - {{ task.status }}</li>
-    {% endfor %}
-  </ul>
-{% endblock %}  
+  <div class="container mt-5">
+    <div class="card">
+      <div class="card-header">
+        <h2>{{ project.name }}</h2>
+      </div>
+      <div class="card-body">
+        <p><strong>Descripción:</strong> {{ project.description|default:"Sin descripción" }}</p>
+        <p><strong>Gestor:</strong> {{ project.manager.username|default:"Sin gestor" }}</p>
+        <p><strong>Fecha de Creación:</strong> {{ project.created_at|date:"d/m/Y" }}</p>
+        <h3>Tareas Asociadas</h3>
+        <a href="{% url 'task_create_for_project' project.id %}" class="btn btn-success mb-3">Crear Nueva Tarea</a>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Estado</th>
+              <th>Prioridad</th>
+              <th>Fecha Límite</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for task in project.tasks.all %}
+              <tr>
+                <td><a href="{% url 'task_detail' task.id %}">{{ task.title }}</a></td>
+                <td>{{ task.get_status_display }}</td>
+                <td>{{ task.get_priority_display }}</td>
+                <td{% if task.is_overdue %} class="text-danger"{% endif %}>{{ task.deadline|date:"d/m/Y"|default:"Sin definir" }}</td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="4">No hay tareas asociadas a este proyecto.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <a href="{% url 'project_update' project.id %}" class="btn btn-primary">Editar</a>
+        <a href="{% url 'project_delete' project.id %}" class="btn btn-danger">Eliminar</a>
+        <a href="{% url 'project_list' %}" class="btn btn-secondary">Volver</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

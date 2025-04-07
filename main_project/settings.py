@@ -2,12 +2,19 @@
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv # Añadir import
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-...' # ¡Cambiar en producción!
 DEBUG = True # ¡Cambiar a False en producción!
 
 ALLOWED_HOSTS = []
+
+# Cargar variables de entorno desde .env
+load_dotenv(os.path.join(BASE_DIR, '.env'))
+
+# Claves API (¡Guardar de forma segura, no hardcodear!)
+INFOJOBS_ACCESS_TOKEN = os.environ.get('INFOJOBS_ACCESS_TOKEN') # Leer desde .env
 
 # Application definition
 INSTALLED_APPS = [
@@ -91,6 +98,9 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
 # Autenticación
 LOGIN_URL = 'login' # Nombre de la URL de inicio de sesión

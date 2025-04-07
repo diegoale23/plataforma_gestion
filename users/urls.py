@@ -1,8 +1,10 @@
+# users/urls.py
 from django.urls import path
 from . import views
 
 urlpatterns = [
-    # Aquí puedes agregar URLs específicas para la aplicación 'users'
     path('manage/', views.manage_users_view, name='manage_users'),
-    # path('profile/', views.profile_view, name='profile'), # Ejemplo
+    path('dashboard/', views.user_dashboard, name='dashboard'),
+    path('manage/delete/<int:user_id>/', views.confirm_delete_user, name='confirm_delete_user'),
+    path('manage/create/', views.create_user_view, name='create_user'),
 ]

@@ -1,0 +1,9 @@
+<!-- templates/registration/logged_out.html -->
+{% extends 'base.html' %}
+{% block content %}
+  <div class="container mt-5">
+    <h2>Sesión Cerrada</h2>
+    <p>Has cerrado sesión correctamente.</p>
+    <a href="{% url 'login' %}" class="btn btn-primary">Volver a Iniciar Sesión</a>
+  </div>
+{% endblock %}

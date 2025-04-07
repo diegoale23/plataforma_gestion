@@ -1,0 +1,38 @@
+<!-- market_analysis/templates/market_analysis/job_offer_list.html -->
+{% extends 'base.html' %}
+{% block content %}
+  <div class="container mt-5">
+    <div class="card">
+      <div class="card-header">
+        <h2>Ofertas de Empleo Activas</h2>
+      </div>
+      <div class="card-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Empresa</th>
+              <th>Ubicación</th>
+              <th>Fecha de Publicación</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for offer in offers %}
+              <tr>
+                <td><a href="{{ offer.url }}" target="_blank">{{ offer.title }}</a></td>
+                <td>{{ offer.company|default:"Sin empresa" }}</td>
+                <td>{{ offer.location|default:"Sin ubicación" }}</td>
+                <td>{{ offer.publication_date|date:"d/m/Y"|default:"Sin fecha" }}</td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="4">No hay ofertas activas disponibles.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <a href="{% url 'market_dashboard' %}" class="btn btn-secondary">Volver al Dashboard</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

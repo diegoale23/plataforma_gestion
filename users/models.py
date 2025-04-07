@@ -3,6 +3,8 @@ from django.db import models
 from django.conf import settings # Mejor práctica para referenciar al User model
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.contrib.auth.models import Permission
+from django.db.models import Q
 from django.utils.translation import gettext_lazy as _ # Para verbose_name en español
 
 class Skill(models.Model):
@@ -23,12 +25,17 @@ class Skill(models.Model):
         return self.name
 
 class Role(models.Model):
-    """Define los roles dentro de la plataforma."""
     name = models.CharField(
         _("Nombre del Rol"),
         max_length=50,
         unique=True,
         help_text=_("Ej: Administrador, Gestor de Proyectos, Colaborador")
+    )
+    permissions = models.ManyToManyField(
+        Permission,
+        blank=True,
+        verbose_name=_("Permisos"),
+        help_text=_("Permisos asociados al rol")
     )
 
     class Meta:
@@ -39,34 +46,26 @@ class Role(models.Model):
         return self.name
 
 class UserProfile(models.Model):
-    """Extiende el modelo User de Django para añadir rol y habilidades."""
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='profile',
-        verbose_name=_("Usuario")
+        related_name='profile'
     )
-    role = models.ForeignKey(
-        Role,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True, # Permitir usuarios sin rol asignado inicialmente
-        verbose_name=_("Rol"),
-        help_text=_("Rol del usuario en la plataforma.")
-    )
-    skills = models.ManyToManyField(
-        Skill,
-        blank=True, # Un usuario puede no tener habilidades registradas
-        related_name='user_profiles',
-        verbose_name=_("Habilidades del Usuario")
-    )
+    role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True, blank=True)
+    skills = models.ManyToManyField(Skill, blank=True, related_name='user_profiles')
     bio = models.TextField(_("Biografía Corta"), blank=True, null=True)
-    # Otros campos que puedas necesitar: teléfono, foto de perfil, etc.
+    location = models.CharField(_("Ubicación"), max_length=100, blank=True, null=True)
 
-    class Meta:
-        verbose_name = _("Perfil de Usuario")
-        verbose_name_plural = _("Perfiles de Usuario")
-
+    def __str__(self):
+        return f"Perfil de {self.user.username}"
+    
+class Meta:
+    permissions = [
+        ("can_manage_users", "Puede gestionar usuarios"),
+        ("can_manage_projects", "Puede gestionar proyectos"),
+        ("can_complete_tasks", "Puede completar tareas"),
+    ]
+    
     def __str__(self):
         return f"Perfil de {self.user.username}"
 

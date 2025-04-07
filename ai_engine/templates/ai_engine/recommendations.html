@@ -1,10 +1,37 @@
 {% extends 'base.html' %}
-
 {% block content %}
-  <h2>Recomendaciones de Tareas</h2>
-  <ul>
-    {% for recommendation in recommendations %}
-      <li>{{ recommendation }}</li>
-    {% endfor %}
-  </ul>
+  <div class="container mt-5">
+    <div class="card">
+      <div class="card-header">
+        <h2>Recomendaciones de Tareas</h2>
+      </div>
+      <div class="card-body">
+        {% if recommendations %}
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Tarea</th>
+                <th>Proyecto</th>
+                <th>Similitud</th>
+                <th>Habilidades Coincidentes</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for rec in recommendations %}
+                <tr>
+                  <td><a href="{% url 'task_detail' rec.task.id %}">{{ rec.task.title }}</a></td>
+                  <td>{{ rec.task.project.name }}</td>
+                  <td>{{ rec.similarity|floatformat:2 }}</td>
+                  <td>{{ rec.matching_skills|join:", " }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p>No hay tareas recomendadas para ti en este momento.</p>
+        {% endif %}
+        <a href="{% url 'task_list' %}" class="btn btn-secondary">Volver a Mis Tareas</a>
+      </div>
+    </div>
+  </div>
 {% endblock %}
