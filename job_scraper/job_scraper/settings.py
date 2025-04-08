@@ -13,6 +13,7 @@ SPIDER_MODULES = ["job_scraper.spiders"]
 NEWSPIDER_MODULE = "job_scraper.spiders"
 
 
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = "job_scraper (+http://www.yourdomain.com)"
 

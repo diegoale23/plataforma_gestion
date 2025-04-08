@@ -31,7 +31,7 @@
             <div class="card text-center">
               <div class="card-body">
                 <h5 class="card-title">Última Actualización</h5>
-                <p class="card-text">{{ last_scraped|date:"d/m/Y" }}</p>
+                <p class="card-text">{{ last_scraped|date:"d/m/Y"|default:"Nunca" }}</p>
               </div>
             </div>
           </div>
@@ -43,7 +43,7 @@
           <canvas id="skillsChart" height="100"></canvas>
         </div>
 
-        <!-- Tendencias de Habilidades (desde ai_engine) -->
+        <!-- Tendencias de Habilidades -->
         {% if skill_trends %}
           <div class="mb-4">
             <h3>Tendencias de Habilidades (Próximo Mes)</h3>
@@ -59,7 +59,7 @@
                 {% for skill, data in skill_trends.items %}
                   <tr>
                     <td>{{ skill }}</td>
-                    <td>{{ data.total_occurrences }}</td>
+                    <td>{{ data.total_occurrences|default:"N/A" }}</td>
                     <td>{{ data.predicted_score|floatformat:2 }}</td>
                   </tr>
                 {% endfor %}
@@ -68,8 +68,11 @@
           </div>
         {% endif %}
 
-        <!-- Enlace para más detalles -->
-        <a href="{% url 'job_offer_list' %}" class="btn btn-primary">Ver Todas las Ofertas</a>
+        <!-- Botones -->
+        <a href="?refresh=true" class="btn btn-primary mb-3">Actualizar Datos</a>
+        {% if request.resolver_match.url_name == 'market_dashboard' %}
+          <a href="{% url 'job_offer_list' %}" class="btn btn-primary">Ver Todas las Ofertas</a>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -82,7 +85,7 @@
       const skillsChart = new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: [{% for skill in top_skills %}'{{ skill.name }}',{% endfor %}],
+          labels: [{% for skill in top_skills %}'{{ skill.name|escapejs }}',{% endfor %}],
           datasets: [{
             label: 'Habilidades Demandadas',
             data: [{% for skill in top_skills %}{{ skill.num_offers }},{% endfor %}],

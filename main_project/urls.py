@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from users import views as user_views
+from market_analysis import views as market_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -12,7 +13,8 @@ urlpatterns = [
 
     path('users/', include('users.urls')),
     path('projects/', include('projects.urls')),
-    path('market/', include('market_analysis.urls')),
+    path('market/dashboard/', market_views.market_dashboard, name='market_dashboard'),
+    path('market/offers/', market_views.job_offer_list, name='job_offer_list'),
     path('ai/', include('ai_engine.urls')),
 
     path('dashboard/', user_views.user_dashboard, name='dashboard'),
