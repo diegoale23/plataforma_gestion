@@ -27,8 +27,8 @@ class JobSource(models.Model):
 class JobOffer(models.Model):
     """Representa una oferta de empleo obtenida de una fuente externa."""
     title = models.CharField(_("Título del Puesto"), max_length=255, db_index=True)
-    company = models.CharField(_("Empresa"), max_length=200, blank=True, null=True, db_index=True)
-    location = models.CharField(_("Ubicación"), max_length=200, blank=True, null=True, db_index=True)
+    company = models.CharField(_("Empresa"), max_length=255, blank=True, null=True, db_index=True)
+    location = models.CharField(_("Ubicación"), max_length=255, blank=True, null=True, db_index=True)
     description = models.TextField(_("Descripción de la Oferta"), blank=True)
     required_skills = models.ManyToManyField(
         Skill,
@@ -38,7 +38,7 @@ class JobOffer(models.Model):
     )
     salary_range = models.CharField(
         _("Rango Salarial"),
-        max_length=150,
+        max_length=255,
         blank=True,
         null=True,
         help_text=_("Ej: 25000-35000 EUR Anual, No especificado")
