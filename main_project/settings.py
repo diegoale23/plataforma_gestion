@@ -1,6 +1,7 @@
 # main_project/settings.py
 import os
 from pathlib import Path
+from decouple import config
 
 from dotenv import load_dotenv # Añadir import
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -116,6 +117,10 @@ LOGIN_REDIRECT_URL = 'dashboard' # A dónde redirigir después de iniciar sesió
 # ... más configuraciones de email ...
 
 # Claves API (¡Guardar de forma segura, no hardcodear!)
-INFOJOBS_API_KEY = os.environ.get('INFOJOBS_API_KEY', 'tu_api_key_infojobs')
-LINKEDIN_API_KEY = os.environ.get('LINKEDIN_API_KEY', 'tu_api_key_linkedin')
+# INFOJOBS_API_KEY = os.environ.get('INFOJOBS_API_KEY', 'tu_api_key_infojobs')
+# LINKEDIN_API_KEY = os.environ.get('LINKEDIN_API_KEY', 'tu_api_key_linkedin')
+
+# Credenciales de LinkedIn
+LINKEDIN_USERNAME = config('LINKEDIN_USERNAME')
+LINKEDIN_PASSWORD = config('LINKEDIN_PASSWORD')
 # ... etc ...

@@ -25,8 +25,6 @@ class LinkedinScraper(BaseScraper):
         print("*" * 70 + "\n")
 
         chrome_options = Options()
-        # Modo visible para depurar
-        # chrome_options.add_argument("--headless")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
@@ -58,18 +56,31 @@ class LinkedinScraper(BaseScraper):
         print(f"Buscando ofertas en LinkedIn: query='{query}', location='{location}'")
         search_url = f"https://www.linkedin.com/jobs/search/?keywords={query}&location={location}&sort=date"
         self.driver.get(search_url)
-        
         time.sleep(5)
         
         soup = BeautifulSoup(self.driver.page_source, 'lxml')
-        if ("challenge" in self.driver.current_url or 
-            "verify" in self.driver.current_url or 
-            soup.select_one('input[id="captcha"]') or 
-            "verifica" in soup.text.lower()):
-            print("CAPTCHA o verificación detectada. Resuelve manualmente y presiona Enter para continuar.")
-            self.driver.save_screenshot("captcha_detected.png")
-            input("Presiona Enter cuando hayas resuelto el CAPTCHA...")
+        max_attempts = 3
+        attempt = 0
+        
+        while ("challenge" in self.driver.current_url or 
+               "verify" in self.driver.current_url or 
+               soup.select_one('input[id="captcha"]')):
+            if attempt >= max_attempts:
+                print("Demasiados intentos fallidos de CAPTCHA. Abortando...")
+                return []
+            print(f"Intento {attempt + 1}/{max_attempts}: CAPTCHA o verificación detectada.")
+            print(f"URL actual: {self.driver.current_url}")
+            print(f"Fragmento de página: {soup.text[:200]}...")
+            self.driver.save_screenshot(f"captcha_detected_attempt_{attempt}.png")
+            response = input("Resuelve el CAPTCHA en el navegador y presiona Enter (o escribe 'skip' para continuar sin CAPTCHA): ")
+            if response.lower() == 'skip':
+                print("Saltando verificación de CAPTCHA manualmente.")
+                break
             time.sleep(5)
+            self.driver.get(search_url)
+            time.sleep(5)
+            soup = BeautifulSoup(self.driver.page_source, 'lxml')
+            attempt += 1
 
         try:
             WebDriverWait(self.driver, 20).until(
@@ -85,7 +96,6 @@ class LinkedinScraper(BaseScraper):
             self.driver.save_screenshot("search_error.png")
             with open("linkedin_search.html", "w", encoding="utf-8") as f:
                 f.write(self.driver.page_source)
-            print("HTML guardado en 'linkedin_search.html' y captura en 'search_error.png'.")
             return []
 
         offer_urls = []
@@ -118,7 +128,7 @@ class LinkedinScraper(BaseScraper):
             WebDriverWait(self.driver, 20).until(
                 EC.presence_of_element_located((By.TAG_NAME, "body"))
             )
-            time.sleep(10)  # Asegurar carga completa
+            time.sleep(10)
             job_id = url.split('/jobs/view/')[1].split('/')[0]
             html_filename = f"job_detail_{job_id}.html"
             with open(html_filename, "w", encoding="utf-8") as f:
@@ -134,23 +144,35 @@ class LinkedinScraper(BaseScraper):
 
             # Título
             title_tag = soup.select_one('h1.top-card-layout__title') or soup.select_one('.job-details-jobs-unified-top-card__job-title')
-            data['title'] = title_tag.get_text(strip=True)[:255] if title_tag else "Sin título"  # Limitar a 255
+            data['title'] = title_tag.get_text(strip=True)[:255] if title_tag else "Sin título"
             print(f"    -> Título: {data['title']}")
 
             # Empresa
             company_tag = soup.select_one('a.topcard__org-name-link') or soup.select_one('.job-details-jobs-unified-top-card__company-name a')
-            data['company'] = company_tag.get_text(strip=True)[:255] if company_tag else None  # Limitar a 255
+            data['company'] = company_tag.get_text(strip=True)[:255] if company_tag else None
             print(f"    -> Empresa: {data['company']}")
 
             # Ubicación y Modalidad
-            location_tag = soup.select_one('span.tvm__text--low-emphasis') or soup.select_one('.job-details-jobs-unified-top-card__primary-description span')
-            modality_tag = soup.select_one('li.NEZIbmErFjXbgGLAeowYpbQggroZvyOIc span') or soup.select_one('span.job-details-jobs-unified-top-card__job-insight-view-model-secondary')
-            data['location'] = location_tag.get_text(strip=True)[:255] if location_tag else None  # Limitar a 255
-            modality_text = modality_tag.get_text(strip=True) if modality_tag else ""
-            if "Híbrido" in modality_text or "Remoto" in modality_text or "Presencial" in modality_text:
-                data['modality'] = modality_text.split('(')[-1].replace(')', '') if '(' in modality_text else modality_text
+            location_tag = soup.select_one('.artdeco-entity-lockup__caption div[dir="ltr"]')
+            if location_tag:
+                location_text = location_tag.get_text(strip=True)
+                if '(' in location_text and ')' in location_text:
+                    data['location'] = location_text.split('(')[0].strip()[:255]
+                    data['modality'] = location_text.split('(')[1].replace(')', '').strip()
+                else:
+                    data['location'] = location_text[:255]
+                    data['modality'] = "No especificada"
             else:
+                data['location'] = "Ubicación no especificada"
                 data['modality'] = "No especificada"
+
+            # Respaldo: extraer ubicación del título si no se encuentra en el HTML
+            if data['location'] == "Ubicación no especificada" and '(' in data['title']:
+                possible_location = data['title'].split('(')[-1].replace(')', '').strip()
+                invalid_keywords = ['urgente', 'inmediata', 'contratación', 'remoto', 'híbrido', 'presencial']
+                if len(possible_location) < 50 and not any(keyword.lower() in possible_location.lower() for keyword in invalid_keywords):
+                    data['location'] = possible_location
+
             print(f"    -> Ubicación: {data['location']} ({data['modality']})")
 
             # Descripción
@@ -160,8 +182,8 @@ class LinkedinScraper(BaseScraper):
 
             # Habilidades
             skills_list = []
-            skills_link = soup.select_one('a.DgyYRhiNYAgnOCxRZXaozXbEhNkWmmmFogVQ')  # Enlace de aptitudes
-            skills_section = soup.select('ul span li')  # Lista en descripción
+            skills_link = soup.select_one('a[href*="#HYM"][data-test-app-aware-link]')
+            skills_section = soup.select('ul span li')
             if skills_link and "Aptitudes:" in skills_link.get_text():
                 skills_text = skills_link.get_text(strip=True).replace("Aptitudes:", "").split(" y ")[0].split(", ")
                 skills_list = [skill.strip() for skill in skills_text if skill.strip()]
@@ -175,35 +197,37 @@ class LinkedinScraper(BaseScraper):
             print(f"    -> Habilidades: {skills_list}")
 
             # Fecha de publicación
-            date_tag = soup.select_one('span.jobs-unified-top-card__posted-date') or soup.select_one('time')
+            date_tag = soup.select_one('time') or soup.select_one('span.jobs-unified-top-card__posted-date')
             if date_tag:
                 date_text = date_tag.get_text(strip=True).lower()
+                print(f"    -> Texto de fecha crudo: '{date_text}'")
                 if "hace" in date_text:
                     match = re.search(r'(\d+)\s*(hora|día|semana|mes)', date_text)
                     if match:
                         value, unit = match.groups()
                         value = int(value)
+                        now = datetime.now().date()
                         if "hora" in unit:
-                            data['publication_date'] = datetime.now().date()
+                            data['publication_date'] = now
                         elif "día" in unit:
-                            data['publication_date'] = (datetime.now() - timedelta(days=value)).date()
+                            data['publication_date'] = now - timedelta(days=value)
                         elif "semana" in unit:
-                            data['publication_date'] = (datetime.now() - timedelta(weeks=value)).date()
+                            data['publication_date'] = now - timedelta(weeks=value)
                         elif "mes" in unit:
-                            data['publication_date'] = (datetime.now() - timedelta(days=value * 30)).date()
+                            data['publication_date'] = now - timedelta(days=value * 30)
                         else:
-                            data['publication_date'] = None
+                            data['publication_date'] = now
                     else:
-                        data['publication_date'] = None
+                        data['publication_date'] = datetime.now().date()
                 else:
-                    data['publication_date'] = None
+                    data['publication_date'] = datetime.now().date()
             else:
-                data['publication_date'] = None
+                data['publication_date'] = datetime.now().date()
             print(f"    -> Fecha: {data['publication_date']}")
 
             # Salario
             salary_tag = soup.select_one('#SALARY .jobs-details__salary-main-rail-card span') or soup.select_one('.jobs-unified-top-card__salary')
-            data['salary_range'] = salary_tag.get_text(strip=True)[:255] if salary_tag else "No especificado"  # Limitar a 255
+            data['salary_range'] = salary_tag.get_text(strip=True)[:255] if salary_tag else "No especificado"
             print(f"    -> Salario: {data['salary_range']}")
 
             if not data.get('title') or not data.get('url'):
@@ -266,13 +290,24 @@ class LinkedinScraper(BaseScraper):
             offer_urls = self.fetch_offers(query, location, max_offers)
             all_offer_data = []
             for url in offer_urls:
-                detail_data = self.parse_offer_detail(url)
-                if detail_data:
-                    all_offer_data.append(detail_data)
+                try:
+                    detail_data = self.parse_offer_detail(url)
+                    if detail_data:
+                        all_offer_data.append(detail_data)
+                except Exception as e:
+                    print(f"Error al procesar {url}: {e}")
                 time.sleep(5)
+            print(f"Total ofertas extraídas: {len(all_offer_data)}")
             return all_offer_data
+        except Exception as e:
+            print(f"Error crítico en la ejecución: {e}")
+            return []
         finally:
-            self.driver.quit()
+            try:
+                self.driver.quit()
+                print("Navegador cerrado correctamente.")
+            except Exception as e:
+                print(f"Error al cerrar el navegador: {e}")
 
 if __name__ == "__main__":
     import django
