@@ -3,7 +3,8 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db import IntegrityError
 from django.utils.dateparse import parse_date
 from market_analysis.models import JobOffer, JobSource, Skill
-
+# Necesitas importar timezone para actualizar JobSource.last_scraped
+from django.utils import timezone
 # Importar las clases implementadas
 from market_analysis.scraping.infojobs_api_client import InfojobsAPIClient
 from market_analysis.scraping.tecnoempleo_scraper import TecnoempleoScraper
@@ -206,5 +207,3 @@ class Command(BaseCommand):
         self.stdout.write(f"Total ofertas fallidas al guardar: {total_failed_imports}")
 
 
-# Necesitas importar timezone para actualizar JobSource.last_scraped
-from django.utils import timezone
