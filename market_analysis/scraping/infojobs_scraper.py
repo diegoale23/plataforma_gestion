@@ -1,4 +1,4 @@
-# market_analysis/scraping/tecnoempleo_scraper.py
+# market_analysis/scraping/infojobs_scraper.py
 import requests
 from bs4 import BeautifulSoup
 import time
@@ -14,46 +14,50 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 if BASE_DIR not in sys.path:
     sys.path.append(BASE_DIR)
 
-class TecnoempleoScraper:
+class InfoJobsScraper:
     def __init__(self):
-        # Importar BaseScraper dentro de la clase después de django.setup()
-        from market_analysis.scraping.base_scraper import BaseScraper
-        self.base_scraper = BaseScraper
-        self.source_name = "Tecnoempleo"
-        self.base_url = "https://www.tecnoempleo.com"
+        self.source_name = "InfoJobs"
+        self.base_url = "https://www.infojobs.net"
         self.headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
             'Accept-Language': 'es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3',
         }
 
-    def fetch_offers(self, query="desarrollador", location="Madrid", max_offers=50):
-        print(f"Buscando ofertas en Tecnoempleo: query='{query}', location='{location}'")
+    def fetch_offers(self, query="desarrollador", location="Madrid", max_offers=30):
+        print(f"Buscando ofertas en InfoJobs: query='{query}', location='{location}'")
         offer_urls = []
         page = 1
-        search_params = {'k': query, 'p': location, 'pagina': page}
-        base_search_url = urljoin(self.base_url, "/ofertas-trabajo/")
+        base_search_url = urljoin(self.base_url, "/ofertas-trabajo")
 
         while len(offer_urls) < max_offers:
-            search_params['pagina'] = page
+            search_params = {
+                'keyword': query,
+                'provincia': location.lower(),
+                'page': page
+            }
             current_search_url = f"{base_search_url}?{urlencode(search_params)}"
             print(f"  -> Solicitando página {page}: {current_search_url}")
+
             try:
                 response = requests.get(current_search_url, headers=self.headers, timeout=15)
                 response.raise_for_status()
                 soup = BeautifulSoup(response.text, 'lxml')
 
-                offer_containers = soup.select('div.p-3.border.rounded.mb-3')
+                # Selector genérico para enlaces de ofertas
+                offer_containers = soup.select('a[href*="/oferta-"]')
                 print(f"  -> Contenedores encontrados: {len(offer_containers)}")
                 if not offer_containers:
-                    print("  -> No se encontraron contenedores con 'div.p-3.border.rounded.mb-3'. Revisar HTML.")
+                    print("  -> No se encontraron contenedores con ofertas. Revisar HTML.")
+                    print("  -> HTML parcial obtenido:", soup.prettify()[:500])
                     break
 
                 found_in_page = 0
                 for container in offer_containers:
-                    link_tag = container.find('a', class_='font-weight-bold text-cyan-700', href=True)
-                    if link_tag:
-                        absolute_url = urljoin(self.base_url, link_tag['href'])
-                        if absolute_url not in offer_urls and "rf-" in absolute_url:
+                    href = container.get('href', '')
+                    if '/oferta-' in href:  # Filtrar enlaces que parecen ser ofertas
+                        absolute_url = urljoin(self.base_url, href)
+                        if absolute_url not in offer_urls:
                             offer_urls.append(absolute_url)
                             found_in_page += 1
                             print(f"    -> URL encontrada: {absolute_url}")
@@ -65,8 +69,8 @@ class TecnoempleoScraper:
                     print("  -> No se encontraron enlaces válidos en esta página.")
                     break
 
-                next_page_link = soup.select_one('a.page-link[href*="pagina="]:-soup-contains("siguiente")')
-                if not next_page_link or len(offer_urls) >= max_offers:
+                next_page = soup.select_one('a[rel="next"]')
+                if not next_page or len(offer_urls) >= max_offers:
                     print("  -> No hay más páginas o límite alcanzado.")
                     break
 
@@ -74,18 +78,16 @@ class TecnoempleoScraper:
                 time.sleep(2)
 
             except requests.RequestException as e:
-                print(f"Error HTTP: {e}")
+                print(f"  -> Error al solicitar página: {e}")
                 break
 
         print(f"Total URLs recolectadas: {len(offer_urls)}")
         return offer_urls
 
     def parse_offer_detail(self, url):
-        # Importar modelos y timezone dentro de la función
         from market_analysis.models import JobOffer, MarketTrend, JobSource
         from users.models import Skill
         from django.utils import timezone
-        import re
 
         print(f"  -> Parseando detalle: {url}")
         try:
@@ -101,35 +103,30 @@ class TecnoempleoScraper:
 
             data = {'url': url, 'source': source}
 
-            json_script = soup.select_one('script[type="application/ld+json"]')
-            json_data = json.loads(json_script.string) if json_script else {}
-            print(f"    -> JSON-LD datos encontrados: {json_data.keys() if json_data else 'Ninguno'}")
-
-            title_tag = soup.find('h1', itemprop='title') or soup.find('h1', class_='h3')
-            data['title'] = title_tag.get_text(strip=True).replace("Urgente", "").strip() if title_tag else json_data.get('title', 'Sin título')
+            # Título
+            title_tag = soup.select_one('h1.job-detail-title')
+            data['title'] = title_tag.get_text(strip=True) if title_tag else 'Sin título'
             print(f"    -> Título: {data['title']}")
 
-            company_tag = soup.select_one('p.text-muted a[href*="/empresa/"]') or soup.select_one('a.text-primary.link-muted')
-            data['company'] = company_tag.get_text(strip=True) if company_tag else json_data.get('hiringOrganization', {}).get('name', 'Desconocida')
+            # Empresa
+            company_tag = soup.select_one('span.company-name a')
+            data['company'] = company_tag.get_text(strip=True) if company_tag else 'Desconocida'
             print(f"    -> Empresa: {data['company']}")
 
-            location_tag = soup.select_one('div.ml-0.mt-2')
-            if location_tag:
-                location_text = location_tag.get_text(strip=True)
-                location_match = re.match(r'^(.*?)(?:\d{2}/\d{2}/\d{4}|$)', location_text)
-                data['location'] = re.sub(r'\s*\(.*\)', '', location_match.group(1)).strip() if location_match else 'Desconocida'
-                modality = "Presencial"
-                if "(Híbrido)" in location_text:
-                    modality = "Híbrido"
-                elif "(100% remoto)" in location_text or "100% remoto" in location_text:
-                    modality = "100% remoto"
-                data['modality'] = modality
-            else:
-                data['location'] = json_data.get('jobLocation', {}).get('address', {}).get('addressLocality', 'Desconocida')
-                data['modality'] = "Presencial"
+            # Ubicación y modalidad
+            location_tag = soup.select_one('span.location')
+            location_text = location_tag.get_text(strip=True) if location_tag else 'Desconocida'
+            data['location'] = location_text
+            data['modality'] = 'Presencial'
+            if 'teletrabajo' in location_text.lower() or 'remoto' in location_text.lower():
+                data['modality'] = '100% remoto'
+            elif 'híbrido' in location_text.lower():
+                data['modality'] = 'Híbrido'
             print(f"    -> Ubicación: {data['location']} ({data['modality']})")
 
-            data['description'] = json_data.get('description', 'No especificada')
+            # Descripción
+            description_tag = soup.select_one('div.ij-Box.mb-xl.mt-l')
+            data['description'] = description_tag.get_text(strip=True) if description_tag else 'No especificada'
             print(f"    -> Descripción: {data['description'][:100]}...")
 
             # Habilidades
@@ -143,43 +140,31 @@ class TecnoempleoScraper:
             }
             invalid_terms = {
                 'desarrollador', 'programador', 'senior', 'junior', 'madrid', 'barcelona', 'españa', 'remoto', 'híbrido',
-                'presencial', 'oferta', 'empleo', 'trabajo', 'rf', 'empresa', 'consultora', 'it', 'software', 'tecnología',
+                'presencial', 'oferta', 'empleo', 'trabajo', 'empresa', 'consultora', 'it', 'software', 'tecnología',
                 'developer', 'engineer', 'fullstack', 'backend', 'frontend', 'ingeniero', 'especialista', 'consultoría',
                 'proyecto', 'nueva', 'urgente', 'buscamos', 'manager', 'docente', 'online', 'inteligencia', 'artificial'
             }
-
-            # Extraer desde HTML
-            skills_tags = soup.select('ul.list-unstyled.mb-0 li a[href*="/ofertas-trabajo/"]')
-            if skills_tags:
-                print(f"    -> Etiquetas de habilidades encontradas: {len(skills_tags)}")
-                for tag in skills_tags:
-                    skill = tag.get_text(strip=True).lower()
-                    if skill == 'php7':  # Normalizar php7 a php desde HTML
-                        skill = 'php'
-                    if skill in valid_skills and skill not in invalid_terms:
-                        skills_list.append(skill)
-                        print(f"    -> Habilidad añadida desde HTML: {skill}")
 
             # Extraer desde descripción
             if data['description']:
                 text = data['description'].lower()
                 print(f"    -> Buscando habilidades en descripción...")
                 for skill in valid_skills:
-                    if skill == 'go':  # Verificación estricta para "go"
+                    if skill == 'go':
                         if not re.search(r'\bgo\b|\bgolang\b', text):
                             continue
-                    if skill == 'php7':  # Normalizar php7 a php desde descripción
+                    if skill == 'php7':
                         skill = 'php'
                     if skill in text and skill not in invalid_terms and skill not in skills_list:
                         skills_list.append(skill)
                         print(f"    -> Habilidad añadida desde descripción: {skill}")
 
-            # Extraer desde la URL con normalización
-            url_skills = url.split('/')[-2].replace('chat-gpt', 'chatgpt').split('-')
+            # Extraer desde URL
+            url_skills = url.split('/')[-1].replace('chat-gpt', 'chatgpt').split('-')
             print(f"    -> Buscando habilidades en URL: {url_skills}")
             for skill in url_skills:
                 skill = skill.lower()
-                if skill == 'php7':  # Normalizar php7 a php desde URL
+                if skill == 'php7':
                     skill = 'php'
                 if skill in valid_skills and skill not in invalid_terms and skill not in skills_list:
                     skills_list.append(skill)
@@ -188,35 +173,25 @@ class TecnoempleoScraper:
             print(f"    -> Habilidades crudas extraídas: {skills_list}")
             skill_objects = []
             for skill_name in set(skills_list):
-                if len(skill_name) > 2:  # Evitar términos cortos
+                if len(skill_name) > 2:
                     skill_obj, _ = Skill.objects.get_or_create(name=skill_name)
                     skill_objects.append(skill_obj)
             print(f"    -> Habilidades finales: {[skill.name for skill in skill_objects]}")
 
-            date_tag = soup.select_one('span.ml-4')
+            # Fecha de publicación
+            date_tag = soup.select_one('span.date')
+            data['publication_date'] = datetime.now().date()
             if date_tag:
-                date_text = date_tag.get_text(strip=True)
-                date_match = re.search(r'(\d{2}/\d{2}/\d{4})', date_text)
-                if date_match:
-                    data['publication_date'] = datetime.strptime(date_match.group(1), '%d/%m/%Y').date()
-                else:
-                    data['publication_date'] = datetime.now().date()
-            else:
-                date_str = json_data.get('datePosted')
-                data['publication_date'] = datetime.strptime(date_str, '%Y-%m-%d').date() if date_str else datetime.now().date()
+                date_text = date_tag.get_text(strip=True).lower()
+                match = re.search(r'hace (\d+) días', date_text)
+                if match:
+                    days_ago = int(match.group(1))
+                    data['publication_date'] = datetime.now().date() - timezone.timedelta(days=days_ago)
             print(f"    -> Fecha: {data['publication_date']}")
 
-            salary_info = json_data.get('baseSalary', {}).get('value', {})
-            if salary_info:
-                min_salary = salary_info.get('minValue')
-                max_salary = salary_info.get('maxValue')
-                unit = salary_info.get('unitText', 'YEAR').capitalize()
-                if min_salary == max_salary:
-                    data['salary_range'] = f"{min_salary}€ /{unit}"
-                else:
-                    data['salary_range'] = f"{min_salary}€ - {max_salary}€ /{unit}"
-            else:
-                data['salary_range'] = "No especificado"
+            # Salario
+            salary_tag = soup.select_one('dd.ij-ca-DescriptionList-item p:contains("Bruto/año")')
+            data['salary_range'] = salary_tag.get_text(strip=True) if salary_tag else 'No especificado'
             print(f"    -> Salario: {data['salary_range']}")
 
             if not data.get('title') or not data.get('url'):
@@ -274,7 +249,7 @@ class TecnoempleoScraper:
             print(f"  -> Error al solicitar detalle: {e}")
             return None
 
-    def run(self, query="desarrollador", location="Madrid", max_offers=50):
+    def run(self, query="desarrollador", location="Madrid", max_offers=30):
         try:
             offer_urls = self.fetch_offers(query, location, max_offers)
             all_offer_data = []
@@ -291,8 +266,8 @@ class TecnoempleoScraper:
 if __name__ == "__main__":
     import django
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'main_project.settings')
-    django.setup()  # Inicializa Django antes de cualquier importación de modelos
-    scraper = TecnoempleoScraper()
+    django.setup()
+    scraper = InfoJobsScraper()
     offers = scraper.run(query="desarrollador", location="Madrid", max_offers=30)
     print(f"Total ofertas extraídas: {len(offers)}")
     for offer in offers:
