@@ -5,9 +5,9 @@ from market_analysis.models import JobOffer, JobSource
 from users.models import Skill
 from django.db.models import Count
 from .scraping.tecnoempleo_scraper import TecnoempleoScraper
-from .scraping.linkedin_scraper import LinkedinScraper  # Importar el scraper de LinkedIn
+from .scraping.linkedin_scraper import LinkedinScraper
 from ai_engine.logic.predictions import get_future_skills_predictions
-from django.conf import settings  # Para acceder a las credenciales desde settings.py
+from django.conf import settings
 
 @login_required
 def market_dashboard(request):
@@ -20,25 +20,22 @@ def market_dashboard(request):
         # Scraper de LinkedIn
         linkedin_username = getattr(settings, 'LINKEDIN_USERNAME', None)
         linkedin_password = getattr(settings, 'LINKEDIN_PASSWORD', None)
-        
+
         if linkedin_username and linkedin_password:
             linkedin_scraper = LinkedinScraper()
             linkedin_scraper.run(
-                username=linkedin_username,
-                password=linkedin_password,
                 query="desarrollador",
                 location="España",
                 max_offers=50
             )
         else:
-            # Opcional: Registrar un mensaje de error si las credenciales no están configuradas
             print("Credenciales de LinkedIn no configuradas en settings.py")
 
     # Estadísticas del dashboard
     total_offers = JobOffer.objects.count()
     active_offers = JobOffer.objects.filter(is_active=True).count()
-    
-    # Última actualización (puede ser de cualquier fuente)
+
+    # Última actualización
     last_scraped = JobSource.objects.filter(last_scraped__isnull=False).order_by('-last_scraped').first()
     last_scraped_date = last_scraped.last_scraped if last_scraped else None
 
@@ -48,7 +45,7 @@ def market_dashboard(request):
         .annotate(num_offers=Count('job_offers'))
         .order_by('-num_offers')[:10]
     )
-    
+
     # Tendencias de habilidades
     skill_trends = get_future_skills_predictions()
     sorted_trends = dict(sorted(skill_trends.items(), key=lambda item: item[1]['predicted_score'], reverse=True))

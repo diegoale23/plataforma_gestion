@@ -11,6 +11,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 from django.utils import timezone
+from django.conf import settings  # Importar settings para las credenciales
 from .base_scraper import BaseScraper
 from market_analysis.models import JobOffer, MarketTrend, JobSource
 from users.models import Skill
@@ -22,29 +23,34 @@ class LinkedinScraper(BaseScraper):
         print("ADVERTENCIA: Scraping de LinkedIn en curso.")
         print("Esto puede violar los Términos de Servicio de LinkedIn y resultar en bloqueos.")
         print("Usa este código bajo tu propio riesgo y con moderación.")
+        print("Ejecutando en modo headless (sin navegador visible).")
         print("*" * 70 + "\n")
 
         chrome_options = Options()
+        chrome_options.add_argument("--headless")  # Ejecutar sin interfaz gráfica
+        chrome_options.add_argument("--disable-gpu")  # Deshabilitar GPU
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
-        chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
-        
+        chrome_options.add_argument(
+            "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+        )
+
         self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
     def login(self, username, password):
         print("Iniciando sesión en LinkedIn...")
         self.driver.get("https://www.linkedin.com/login")
         time.sleep(2)
-        
+
         email_field = self.driver.find_element(By.ID, "username")
         email_field.send_keys(username)
-        
+
         password_field = self.driver.find_element(By.ID, "password")
         password_field.send_keys(password)
-        
+
         self.driver.find_element(By.XPATH, "//button[@type='submit']").click()
         time.sleep(5)
-        
+
         if "feed" in self.driver.current_url:
             print("Inicio de sesión exitoso.")
         else:
@@ -57,13 +63,13 @@ class LinkedinScraper(BaseScraper):
         search_url = f"https://www.linkedin.com/jobs/search/?keywords={query}&location={location}&sort=date"
         self.driver.get(search_url)
         time.sleep(5)
-        
+
         soup = BeautifulSoup(self.driver.page_source, 'lxml')
         max_attempts = 3
         attempt = 0
-        
-        while ("challenge" in self.driver.current_url or 
-               "verify" in self.driver.current_url or 
+
+        while ("challenge" in self.driver.current_url or
+               "verify" in self.driver.current_url or
                soup.select_one('input[id="captcha"]')):
             if attempt >= max_attempts:
                 print("Demasiados intentos fallidos de CAPTCHA. Abortando...")
@@ -72,10 +78,8 @@ class LinkedinScraper(BaseScraper):
             print(f"URL actual: {self.driver.current_url}")
             print(f"Fragmento de página: {soup.text[:200]}...")
             self.driver.save_screenshot(f"captcha_detected_attempt_{attempt}.png")
-            response = input("Resuelve el CAPTCHA en el navegador y presiona Enter (o escribe 'skip' para continuar sin CAPTCHA): ")
-            if response.lower() == 'skip':
-                print("Saltando verificación de CAPTCHA manualmente.")
-                break
+            print("Modo headless activo: no se puede resolver CAPTCHA manualmente. Saltando...")
+            break  # En modo headless, no se puede resolver CAPTCHA manualmente
             time.sleep(5)
             self.driver.get(search_url)
             time.sleep(5)
@@ -284,8 +288,15 @@ class LinkedinScraper(BaseScraper):
             print(f"  -> Error al parsear detalle: {e}")
             return None
 
-    def run(self, username, password, query="desarrollador", location="España", max_offers=10):
+    def run(self, query="desarrollador", location="España", max_offers=10):
         try:
+            # Obtener credenciales desde settings.py
+            username = getattr(settings, 'LINKEDIN_USERNAME', None)
+            password = getattr(settings, 'LINKEDIN_PASSWORD', None)
+
+            if not username or not password:
+                raise ValueError("Las credenciales de LinkedIn (LINKEDIN_USERNAME y LINKEDIN_PASSWORD) no están configuradas en settings.py")
+
             self.login(username, password)
             offer_urls = self.fetch_offers(query, location, max_offers)
             all_offer_data = []
@@ -312,12 +323,10 @@ class LinkedinScraper(BaseScraper):
 if __name__ == "__main__":
     import django
     import os
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'plataforma_gestion.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'main_project.settings')  # Actualizado al nombre correcto
     django.setup()
     scraper = LinkedinScraper()
     offers = scraper.run(
-        username="diegoale23@yahoo.com",
-        password="dacp18419361",
         query="desarrollador",
         location="España",
         max_offers=5

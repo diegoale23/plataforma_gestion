@@ -3,19 +3,12 @@ import os
 from pathlib import Path
 from decouple import config
 
-from dotenv import load_dotenv # Añadir import
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-...' # ¡Cambiar en producción!
-DEBUG = True # ¡Cambiar a False en producción!
+SECRET_KEY = config('SECRET_KEY')  # Leer SECRET_KEY desde .env
+DEBUG = config('DEBUG', default=False, cast=bool)  # Leer DEBUG con valor por defecto
 
 ALLOWED_HOSTS = []
-
-# Cargar variables de entorno desde .env
-load_dotenv(os.path.join(BASE_DIR, '.env'))
-
-# Claves API (¡Guardar de forma segura, no hardcodear!)
-INFOJOBS_ACCESS_TOKEN = os.environ.get('INFOJOBS_ACCESS_TOKEN') # Leer desde .env
 
 # Application definition
 INSTALLED_APPS = [
@@ -25,24 +18,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     # Mis aplicaciones
     'users.apps.UsersConfig',
     'projects.apps.ProjectsConfig',
     'market_analysis.apps.MarketAnalysisConfig',
     'ai_engine.apps.AiEngineConfig',
-
-    # Dependencias (ejemplo)
-    # 'crispy_forms', # Si usas crispy-forms para mejorar formularios
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware', # Añade esta línea
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware', # Añade esta línea
-    'django.contrib.messages.middleware.MessageMiddleware', # Añade esta línea
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -53,7 +42,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             BASE_DIR / 'templates',
-            os.path.join(BASE_DIR, 'users', 'templates'), # Añade esta línea
+            BASE_DIR / 'users' / 'templates',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -70,57 +59,56 @@ TEMPLATES = [
 WSGI_APPLICATION = 'main_project.wsgi.application'
 
 # Database
-# https://docs.djangoproject.com/en/stable/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql', # O 'django.db.backends.mysql'
-        'NAME': 'plataforma_db',
-        'USER': 'postgres',
-        'PASSWORD': 'dacp18419361',
-        'HOST': 'localhost', # O la IP/host de tu servidor DB
-        'PORT': '5432',      # O el puerto de MySQL (3306)
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DATABASE_NAME', default='plataforma_db'),
+        'USER': config('DATABASE_USER', default='postgres'),
+        'PASSWORD': config('DATABASE_PASSWORD', default='dacp18419361'),
+        'HOST': config('DATABASE_HOST', default='localhost'),
+        'PORT': config('DATABASE_PORT', default='5432'),
     }
 }
 
 # Password validation
-# ... validators por defecto ...
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
 
 # Internationalization
-LANGUAGE_CODE = 'es-es' # Español
+LANGUAGE_CODE = 'es-es'
 TIME_ZONE = 'Europe/Madrid'
 USE_I18N = True
-USE_L10N = True # Deprecado en Django 5.0, usar USE_I18N
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
+# Static files
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_collected') # Para producción
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CELERY_BROKER_URL = 'redis://localhost:6379/1'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/1'
+# Celery configuration
+CELERY_BROKER_URL = config('CELERY_BROKER_URL', default='redis://localhost:6379/1')
+CELERY_RESULT_BACKEND = config('CELERY_RESULT_BACKEND', default='redis://localhost:6379/1')
 
-# Autenticación
-LOGIN_URL = 'login' # Nombre de la URL de inicio de sesión
-LOGOUT_REDIRECT_URL = 'home' # A dónde redirigir después de cerrar sesión
-LOGIN_REDIRECT_URL = 'dashboard' # A dónde redirigir después de iniciar sesión
+# Authentication
+LOGIN_URL = 'login'
+LOGOUT_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = 'dashboard'
 
-# Modelo de usuario personalizado (si es necesario extender el User por defecto)
-# AUTH_USER_MODEL = 'users.CustomUser' # Descomentar si creas un modelo de usuario personalizado
-
-# Configuración adicional (ej. email, APIs externas, etc.)
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.example.com'
-# ... más configuraciones de email ...
-
-# Claves API (¡Guardar de forma segura, no hardcodear!)
-# INFOJOBS_API_KEY = os.environ.get('INFOJOBS_API_KEY', 'tu_api_key_infojobs')
-# LINKEDIN_API_KEY = os.environ.get('LINKEDIN_API_KEY', 'tu_api_key_linkedin')
-
-# Credenciales de LinkedIn
-LINKEDIN_USERNAME = config('LINKEDIN_USERNAME')
-LINKEDIN_PASSWORD = config('LINKEDIN_PASSWORD')
-# ... etc ...
+# API and external service credentials
+INFOJOBS_ACCESS_TOKEN = config('INFOJOBS_ACCESS_TOKEN', default='')
+LINKEDIN_USERNAME = config('LINKEDIN_USERNAME', default='')
+LINKEDIN_PASSWORD = config('LINKEDIN_PASSWORD', default='')
