@@ -6,6 +6,7 @@ from users.models import Skill
 from django.db.models import Count
 from .scraping.tecnoempleo_scraper import TecnoempleoScraper
 from .scraping.linkedin_scraper import LinkedinScraper
+from .scraping.infojobs_scraper import InfojobsScraper
 from ai_engine.logic.predictions import get_future_skills_predictions
 from django.conf import settings
 
@@ -13,6 +14,10 @@ from django.conf import settings
 def market_dashboard(request):
     # Si se solicita actualizar los datos
     if request.GET.get('refresh', False):
+        # Scraper de InfoJobs
+        infojobs_scraper = InfojobsScraper()
+        infojobs_scraper.run(query="desarrollador", location="España", max_offers=50)
+        
         # Scraper de Tecnoempleo
         tecnoempleo_scraper = TecnoempleoScraper()
         tecnoempleo_scraper.run(query="desarrollador", location="Madrid", max_offers=50)

@@ -109,6 +109,6 @@ LOGOUT_REDIRECT_URL = 'home'
 LOGIN_REDIRECT_URL = 'dashboard'
 
 # API and external service credentials
-INFOJOBS_ACCESS_TOKEN = config('INFOJOBS_ACCESS_TOKEN', default='')
+#INFOJOBS_ACCESS_TOKEN = config('INFOJOBS_ACCESS_TOKEN', default='')
 LINKEDIN_USERNAME = config('LINKEDIN_USERNAME', default='')
 LINKEDIN_PASSWORD = config('LINKEDIN_PASSWORD', default='')
