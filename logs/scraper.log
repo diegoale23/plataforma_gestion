@@ -1,0 +1,12 @@
+Iniciando scraping de InfoJobs: query='desarrollador', location='asturias', max_offers=5
+Obteniendo ofertas para query='desarrollador', location='asturias'
+No se encontró banner de cookies.
+No se encontró botón 'Mostrar más'.
+No se encontraron ofertas. Guardando HTML para depuración.
+Scraping de InfoJobs completado: 0 ofertas procesadas.
+Iniciando scraping de InfoJobs: query='desarrollador', location='España', max_offers=50
+Obteniendo ofertas para query='desarrollador', location='España'
+No se encontró banner de cookies.
+No se encontró botón 'Mostrar más'.
+No se encontraron ofertas. Guardando HTML para depuración.
+Scraping de InfoJobs completado: 0 ofertas procesadas.

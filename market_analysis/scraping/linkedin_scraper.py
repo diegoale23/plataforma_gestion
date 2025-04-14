@@ -329,7 +329,7 @@ if __name__ == "__main__":
     offers = scraper.run(
         query="desarrollador",
         location="España",
-        max_offers=10
+        max_offers=30
     )
     print(f"Total ofertas extraídas: {len(offers)}")
     for offer in offers:
