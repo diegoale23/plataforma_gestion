@@ -96,6 +96,8 @@ LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = 'home'
 LOGIN_REDIRECT_URL = 'dashboard'
 
+
+
 LINKEDIN_USERNAME = config('LINKEDIN_USERNAME', default='')
 LINKEDIN_PASSWORD = config('LINKEDIN_PASSWORD', default='')
 

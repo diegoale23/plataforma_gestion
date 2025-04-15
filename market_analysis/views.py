@@ -1,6 +1,7 @@
 # market_analysis/views.py
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from market_analysis.models import JobOffer, JobSource
 from users.models import Skill
 from django.db.models import Count
@@ -13,22 +14,34 @@ from django.conf import settings
 @login_required
 def market_dashboard(request):
     if request.GET.get('refresh', False):
-        # Scraper de InfoJobs
-        infojobs_scraper = InfojobsScraper()
-        infojobs_scraper.run(query="desarrollador", location="España", max_offers=50)
-        
-        # Scraper de Tecnoempleo
-        tecnoempleo_scraper = TecnoempleoScraper()
-        tecnoempleo_scraper.run(query="desarrollador", location="Madrid", max_offers=50)
+        try:
+            # Scraper de InfoJobs
+            infojobs_scraper = InfojobsScraper()
+            infojobs_offers = infojobs_scraper.run(query="desarrollador", location="España", max_offers=50)
+            messages.success(request, f"Se scrapearon {len(infojobs_offers)} ofertas de InfoJobs.")
+        except Exception as e:
+            messages.error(request, f"Error al scrapear InfoJobs: {e}")
+
+        try:
+            # Scraper de Tecnoempleo
+            tecnoempleo_scraper = TecnoempleoScraper()
+            tecnoempleo_offers = tecnoempleo_scraper.run(query="desarrollador", location="Madrid", max_offers=50)
+            messages.success(request, f"Se scrapearon {len(tecnoempleo_offers)} ofertas de Tecnoempleo.")
+        except Exception as e:
+            messages.error(request, f"Error al scrapear Tecnoempleo: {e}")
 
         # Scraper de LinkedIn (si tienes credenciales)
         linkedin_username = getattr(settings, 'LINKEDIN_USERNAME', None)
         linkedin_password = getattr(settings, 'LINKEDIN_PASSWORD', None)
         if linkedin_username and linkedin_password:
-            linkedin_scraper = LinkedinScraper()
-            linkedin_scraper.run(query="desarrollador", location="España", max_offers=50)
+            try:
+                linkedin_scraper = LinkedinScraper()
+                linkedin_offers = linkedin_scraper.run(query="desarrollador", location="España", max_offers=50)
+                messages.success(request, f"Se scrapearon {len(linkedin_offers)} ofertas de LinkedIn.")
+            except Exception as e:
+                messages.error(request, f"Error al scrapear LinkedIn: {e}")
         else:
-            print("Credenciales de LinkedIn no configuradas en settings.py")
+            messages.warning(request, "Credenciales de LinkedIn no configuradas en settings.py")
 
     total_offers = JobOffer.objects.count()
     active_offers = JobOffer.objects.filter(is_active=True).count()
