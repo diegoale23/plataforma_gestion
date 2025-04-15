@@ -1,4 +1,3 @@
-<!-- market_analysis/templates/market_analysis/dashboard.html -->
 {% extends 'base.html' %}
 {% load static %}
 
@@ -43,6 +42,26 @@
           <canvas id="skillsChart" height="100"></canvas>
         </div>
 
+        <!-- Habilidades por Región -->
+        <div class="mb-4">
+          <h3>Habilidades por Región</h3>
+          <canvas id="regionSkillsChart" height="100"></canvas>
+        </div>
+
+        <!-- Habilidades por Fuente -->
+        <div class="mb-4">
+          <h3>Comparación por Fuente</h3>
+          <canvas id="sourceSkillsChart" height="100"></canvas>
+        </div>
+
+        <!-- Inscritos por Habilidad -->
+        {% if applicants_by_skill %}
+          <div class="mb-4">
+            <h3>Inscritos por Habilidad</h3>
+            <canvas id="applicantsChart" height="100"></canvas>
+          </div>
+        {% endif %}
+
         <!-- Tendencias de Habilidades -->
         {% if skill_trends %}
           <div class="mb-4">
@@ -70,19 +89,19 @@
 
         <!-- Botones -->
         <a href="?refresh=true" class="btn btn-primary mb-3">Actualizar Datos</a>
-        {% if request.resolver_match.url_name == 'market_dashboard' %}
-          <a href="{% url 'job_offer_list' %}" class="btn btn-primary">Ver Todas las Ofertas</a>
-        {% endif %}
+        <a href="{% url 'export_skills_report' %}" class="btn btn-secondary mb-3">Exportar Reporte</a>
+        <a href="{% url 'job_offer_list' %}" class="btn btn-primary">Ver Todas las Ofertas</a>
       </div>
     </div>
   </div>
 
-  <!-- Scripts para el gráfico -->
+  <!-- Scripts para gráficos -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const ctx = document.getElementById('skillsChart').getContext('2d');
-      const skillsChart = new Chart(ctx, {
+      // Gráfico de Habilidades Generales
+      const skillsCtx = document.getElementById('skillsChart').getContext('2d');
+      new Chart(skillsCtx, {
         type: 'bar',
         data: {
           labels: [{% for skill in top_skills %}'{{ skill.name|escapejs }}',{% endfor %}],
@@ -96,28 +115,87 @@
         },
         options: {
           scales: {
-            y: {
-              beginAtZero: true,
-              title: {
-                display: true,
-                text: 'Número de Ofertas'
-              }
-            },
-            x: {
-              title: {
-                display: true,
-                text: 'Habilidades'
-              }
-            }
-          },
-          plugins: {
-            legend: {
-              display: true,
-              position: 'top'
-            }
+            y: { beginAtZero: true, title: { display: true, text: 'Número de Ofertas' } },
+            x: { title: { display: true, text: 'Habilidades' } }
           }
         }
       });
+
+      // Gráfico de Habilidades por Región
+      const regionCtx = document.getElementById('regionSkillsChart').getContext('2d');
+      new Chart(regionCtx, {
+        type: 'bar',
+        data: {
+          labels: [{% for region in skills_by_region %}'{{ region.location|default:"Sin región"|escapejs }}',{% endfor %}],
+          datasets: [
+            {% for region in skills_by_region %}
+              {
+                label: '{{ region.location|default:"Sin región"|escapejs }}',
+                data: [{% for skill in region.skills %}{{ skill.count }},{% endfor %}],
+                backgroundColor: 'rgba({{ forloop.counter0|add:50 }}, 192, 192, 0.2)',
+                borderColor: 'rgba({{ forloop.counter0|add:50 }}, 192, 192, 1)',
+                borderWidth: 1
+              },
+            {% endfor %}
+          ]
+        },
+        options: {
+          scales: {
+            y: { beginAtZero: true, title: { display: true, text: 'Número de Ofertas' } },
+            x: { title: { display: true, text: 'Habilidades' } }
+          }
+        }
+      });
+
+      // Gráfico de Habilidades por Fuente
+      const sourceCtx = document.getElementById('sourceSkillsChart').getContext('2d');
+      new Chart(sourceCtx, {
+        type: 'bar',
+        data: {
+          labels: [{% for source in skills_by_source %}'{{ source.source__name|default:"Sin fuente"|escapejs }}',{% endfor %}],
+          datasets: [
+            {% for source in skills_by_source %}
+              {
+                label: '{{ source.source__name|default:"Sin fuente"|escapejs }}',
+                data: [{% for skill in source.skills %}{{ skill.count }},{% endfor %}],
+                backgroundColor: 'rgba({{ forloop.counter0|add:100 }}, 192, 192, 0.2)',
+                borderColor: 'rgba({{ forloop.counter0|add:100 }}, 192, 192, 1)',
+                borderWidth: 1
+              },
+            {% endfor %}
+          ]
+        },
+        options: {
+          scales: {
+            y: { beginAtZero: true, title: { display: true, text: 'Número de Ofertas' } },
+            x: { title: { display: true, text: 'Habilidades' } }
+          }
+        }
+      });
+
+      // Gráfico de Inscritos por Habilidad
+      {% if applicants_by_skill %}
+        const applicantsCtx = document.getElementById('applicantsChart').getContext('2d');
+        new Chart(applicantsCtx, {
+          type: 'bar',
+          data: {
+            labels: [{% for skill in applicants_by_skill %}'{{ skill.name|escapejs }}',{% endfor %}],
+            datasets: [{
+              label: 'Inscritos Promedio',
+              data: [{% for skill in applicants_by_skill %}{{ skill.avg_applicants|floatformat:1 }},{% endfor %}],
+              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+              borderColor: 'rgba(255, 99, 132, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: { beginAtZero: true, title: { display: true, text: 'Inscritos Promedio' } },
+              x: { title: { display: true, text: 'Habilidades' } }
+            }
+          }
+        });
+      {% endif %}
     });
   </script>
 {% endblock %}

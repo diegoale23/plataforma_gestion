@@ -1,0 +1,261 @@
+TWOCAPTCHA_API_KEY no está configurada en .env. El CAPTCHA deberá resolverse manualmente.
+2Captcha inicializado correctamente.
+Iniciando scraping de InfoJobs: query='desarrollador', location='España', max_offers=50
+Obteniendo ofertas para query='desarrollador', location='España'
+Detectado CAPTCHA de GeeTest (intento 1/3).
+Intentando resolver con 2Captcha.
+Script de GeeTest encontrado: 
+                          initGeetest({
+                            gt: "ce33de396f8d04030f6eca8fbd225070",
+                            challenge: "e48b6079aad5bdce87b1d769fd6207ce",
+                ...
+gt: ce33de396f8d04030f6eca8fbd225070
+challenge: e48b6079aad5bdce87b1d769fd6207ce
+Error al resolver CAPTCHA con 2Captcha: ERROR_WRONG_USER_KEY. Verifica que TWOCAPTCHA_API_KEY esté definida y correcta en .env (puedes obtener una en https://2captcha.com/).
+Pasando a resolución manual.
+No se pudo resolver con 2Captcha o no configurado. Resuelve el CAPTCHA manualmente (intento 1).
+CAPTCHA resuelto manualmente.
+No se encontró banner de cookies.
+Ofertas detectadas en la página.
+No se encontró botón 'Mostrar más'.
+Se encontraron 58 elementos li.ij-List-item
+Descripción: Desarrollador Backend .Net Senior Acerca de BEIGAR En BEIGAR, somos pioneros en la innovación tecnológica y buscamos constantemente la excelencia en nuestros proyectos. Nuestro equipo está formado por...
+Ubicación extraída (HTML): Valencia
+Empresa extraída (HTML): BEIGAR CONSULTORES
+Salario extraído (HTML): 36.000 € - 40.000 € Bruto/año
+Fecha extraída: 2025-04-14 (texto: Hace 1d)
+No se encontró número de inscritos
+Habilidades (etiquetas): []
+Habilidades totales: ['.NET', 'ASP.NET', 'Kubernetes', 'Docker', 'MongoDB', 'SQL Server', 'Redis', 'OAuth', 'JWT', 'OpenID', 'ETL', 'OpenAPI']
+Encontrada oferta: Desarrollador Backend .Net Senior, URL: https://www.infojobs.net/valencia/desarrollador-backend-.net-senior/of-iefef081c8446bc812d4b804216895a?applicationOrigin=search-new&page=1&sortBy=RELEVANCE, Empresa: BEIGAR CONSULTORES, Ubicación: Valencia, Salario: 36.000 € - 40.000 € Bruto/año, Habilidades: ['.NET', 'ASP.NET', 'Kubernetes', 'Docker', 'MongoDB', 'SQL Server', 'Redis', 'OAuth', 'JWT', 'OpenID', 'ETL', 'OpenAPI'], Fecha: 2025-04-14, Inscritos: None
+Descripción: ¡En E2K2 cumplimos 20 años de éxitos comprometidos con las Personas y la Tecnología! Actualmente, buscamos un perfil de Desarrollador Java con 3 años de experiencia para trabajar en modo teletrabajo. ...
+Ubicación extraída (HTML): Madrid
+Empresa extraída (HTML): E2K2 Netechnology
+Salario extraído (HTML): Más de 30.000 €
+Fecha extraída: 2025-04-09 (texto: Hace 6d)
+No se encontró número de inscritos
+Habilidades (etiquetas): []
+Habilidades totales: ['Java']
+Encontrada oferta: Desarrollador/a Java SpringBoot y AngularJS Madrid Teletrabajo, URL: https://www.infojobs.net/madrid/desarrollador-java-springboot-angularjs-madrid-teletrabajo/of-ic42f8af4f9411d951ea4d68967263a?applicationOrigin=search-new&page=1&sortBy=RELEVANCE, Empresa: E2K2 Netechnology, Ubicación: Madrid, Salario: Más de 30.000 €, Habilidades: ['Java'], Fecha: 2025-04-09, Inscritos: None
+No se encontró título. HTML de oferta: <li class="ij-List-item"><div aria-label="Publicidad" class="ij-OfferList-banner ij-OfferList-banner--firstPromoted"><div id="ad-inline_1-wrapper" class="adit-saitama-SaitamaAd" role="complementary"><div id="ad-inline_1" data-google-query-id="CI6akZ392YwDFV1HHQkdYesRyQ"><div id="google_ads_iframe_/124564242/Infojobs/Infojobs-web_desktop/ij-wde-offer-list-inline_1_0__container__" style="border: 0pt none; display: inline-block; width: 100%; height: auto;"><iframe frameborder="0" src="https://2658c
+Descripción: En Grupo Hasten estamos seleccionando un/a Desarrollador/a Senior Angular con inglés alto y 5 años de experiencia para unirse a un proyecto del sector bancario en uno de nuestros grandes clientes en m...
+Ubicación extraída (HTML): Remoto
+Empresa extraída (HTML): Grupo Hasten
+Salario extraído (HTML): Salario no disponible
+Fecha extraída: 2025-04-15 (texto: Hace 20h)
+No se encontró número de inscritos
+Habilidades (etiquetas): []
+Habilidades totales: ['Java', 'Angular']
+Encontrada oferta: Desarrollador/a Senior Angular con inglés C1 - 100% Teletrabajo, URL: https://www.infojobs.net/remoto/desarrollador-senior-angular-con-ingles-c1-100-teletrabajo/of-ief315dc20441d28559505416704b81?applicationOrigin=search-new&page=1&sortBy=RELEVANCE, Empresa: Grupo Hasten, Ubicación: Remoto, Salario: Salario no disponible, Habilidades: ['Java', 'Angular'], Fecha: 2025-04-15, Inscritos: None
+Descripción: Buscamos un Desarrollador/ Analista Programador .Net Full Stack con al menos entre 3 y 5 años de experiencia, para colaborar con el departamento de desarrollo en importante banco a nivel mundial. Sus ...
+Ubicación extraída (HTML): Madrid
+Empresa extraída (HTML): X25 INFORMÁTICA, S.L.
+Salario extraído (HTML): Salario no disponible
+Fecha extraída: 2025-04-14 (texto: Hace 1d)
+No se encontró número de inscritos
+Habilidades (etiquetas): []
+Habilidades totales: ['.NET']
+Encontrada oferta: Desarrollador .Net Full Stack, URL: https://www.infojobs.net/madrid/desarrollador-.net-full-stack/of-i43d077dbde4f61a5d1997060a71aa5?applicationOrigin=search-new&page=1&sortBy=RELEVANCE, Empresa: X25 INFORMÁTICA, S.L., Ubicación: Madrid, Salario: Salario no disponible, Habilidades: ['.NET'], Fecha: 2025-04-14, Inscritos: None
+No se encontró título. HTML de oferta: <li class="ij-List-item"><div class="ij-CampaignsLogosSimple"><ul class="sui-ThumbnailList"><li class="sui-ThumbnailList-item"><a href="https://nttdata.ofertas-trabajo.infojobs.net" target="_self"><figure class="sui-ThumbnailBasic"><div class="sui-ImagePlaceholder sui-ThumbnailBasic-image sui-ImagePlaceholder--rounded"><picture><source media="(max-width: 480px)" srcset="https://multimedia.infojobs.net/api/v1/tenants/c7e2b9c1-8480-43b0-ad9e-000c17aa2cbb/domains/718302b6-5343-43d3-a8a3-829dc3da089
+Descripción: Funciones Desde Grupo Hasten estamos seleccionando perfiles de Desarrollador/a Android Kotlin senior para trabajar con uno de nuestros importantes clientes de manera 100% remota en un proyecto de Admi...
+Ubicación extraída (HTML): Remoto
+Empresa extraída (HTML): Grupo Hasten
+Salario extraído (HTML): 26.000 € - 33.000 € Bruto/año
+Fecha extraída: 2025-04-11 (texto: Hace 4d)
+No se encontró número de inscritos
+Habilidades (etiquetas): []
+Habilidades totales: ['Kotlin']
+Encontrada oferta: Desarrollador/a Android Kotlin senior | 100% TELETRABAJO, URL: https://www.infojobs.net/remoto/desarrollador-android-kotlin-senior-100-teletrabajo/of-ic3fe9d5b6748ac894488ddda817f69?applicationOrigin=search-new&page=1&sortBy=RELEVANCE, Empresa: Grupo Hasten, Ubicación: Remoto, Salario: 26.000 € - 33.000 € Bruto/año, Habilidades: ['Kotlin'], Fecha: 2025-04-11, Inscritos: None
+Descripción: Precisamos Desarrollador/a SW para incorporarse en uno de nuestros clientes situado en Madrid. Trabajo 100% remoto. Funciones: Diseño y desarrollo de software a partir de los requisitos de sistema y s...
+Ubicación extraída (HTML): Madrid
+Empresa extraída (HTML): ColaVoro
+Salario extraído (HTML): 36.000 € - 48.000 € Bruto/año
+Fecha extraída: 2025-04-10 (texto: Hace 5d)
+No se encontró número de inscritos
+Habilidades (etiquetas): []
+Habilidades totales: []
+Encontrada oferta: DESARROLLADOR/A SW DE SISTEMAS CRITICOS DISTRIBUIDOS, URL: https://www.infojobs.net/madrid/desarrollador-sw-sistemas-criticos-distribuidos/of-i1e138e85e048fca4f992f8af00a9cc?applicationOrigin=search-new&page=1&sortBy=RELEVANCE, Empresa: ColaVoro, Ubicación: Madrid, Salario: 36.000 € - 48.000 € Bruto/año, Habilidades: [], Fecha: 2025-04-10, Inscritos: None
+Descripción: Funciones Desde Grupo Hasten estamos seleccionando perfiles de Desarrolladores/as Fullstack Java y Golang para participar en tareas de análisis y programación dentro del equipo de soporte e-commerce d...
+Ubicación extraída (HTML): Remoto
+Empresa extraída (HTML): Grupo Hasten
+Salario extraído (HTML): 21.000 € - 25.000 € Bruto/año
+Fecha extraída: 2025-04-09 (texto: Hace 6d)
+No se encontró número de inscritos
+Habilidades (etiquetas): []
+Habilidades totales: ['Java', 'Golang']
+Encontrada oferta: Desarrollador/a Fullstack Java y Golang | 100% TELETRABAJO, URL: https://www.infojobs.net/remoto/desarrollador-fullstack-java-golang-100-teletrabajo/of-i9e363661f54c008b946ed67cc71c05?applicationOrigin=search-new&page=1&sortBy=RELEVANCE, Empresa: Grupo Hasten, Ubicación: Remoto, Salario: 21.000 € - 25.000 € Bruto/año, Habilidades: ['Java', 'Golang'], Fecha: 2025-04-09, Inscritos: None
+Descripción: Funciones Desde Grupo Hasten estamos seleccionando perfiles de Desarrollador/a Drupal 10 para trabajar con uno de nuestros importantes clientes de manera 100% remota. Funciones: - Desarrollar y manten...
+Ubicación extraída (HTML): Remoto
+Empresa extraída (HTML): Grupo Hasten
+Salario extraído (HTML): 26.000 € - 33.000 € Bruto/año
+Fecha extraída: 2025-04-08 (texto: 08 abr)
+No se encontró número de inscritos
+Habilidades (etiquetas): []
+Habilidades totales: ['Docker', 'Drupal']
+Encontrada oferta: Desarrollador/a Drupal 10 | 100% TELETRABAJO, URL: https://www.infojobs.net/remoto/desarrollador-drupal-10-100-teletrabajo/of-ic74efa880342f4af60b28217a5837e?applicationOrigin=search-new&page=1&sortBy=RELEVANCE, Empresa: Grupo Hasten, Ubicación: Remoto, Salario: 26.000 € - 33.000 € Bruto/año, Habilidades: ['Docker', 'Drupal'], Fecha: 2025-04-08, Inscritos: None
+No se encontró título. HTML de oferta: <li class="ij-List-item"><div aria-label="Publicidad" class="ij-OfferList-banner"><div id="ad-inline_2-wrapper" class="adit-saitama-SaitamaAd" role="complementary"><div id="ad-inline_2" data-google-query-id="CM2dlZ392YwDFV1HHQkdYesRyQ"><div id="google_ads_iframe_/124564242/Infojobs/Infojobs-web_desktop/ij-wde-offer-list-inline_2_0__container__" style="border: 0pt none;"><iframe id="google_ads_iframe_/124564242/Infojobs/Infojobs-web_desktop/ij-wde-offer-list-inline_2_0" name="google_ads_iframe_/1
+Descripción: Desde Grupo Hasten seleccionamos un/a Desarrollador Java con al menos 5 años de experiencia en Python, Unix, ShellScript y nivel de inglés alto para importante proyecto en modalidad híbrida en Las Tab...
+Ubicación extraída (HTML): Madrid
+Empresa extraída (HTML): Grupo Hasten
+Salario extraído (HTML): Salario no disponible
+Fecha extraída: 2025-04-04 (texto: 04 abr)
+No se encontró número de inscritos
+Habilidades (etiquetas): []
+Habilidades totales: ['Java']
+Encontrada oferta: Desarrollador/a Java / Python /ShellScript / Inglés, URL: https://www.infojobs.net/madrid/desarrollador-java-python-shellscript-ingles/of-idd3252f383496e8d8f5f47d86ecec7?applicationOrigin=search-new&page=1&sortBy=RELEVANCE, Empresa: Grupo Hasten, Ubicación: Madrid, Salario: Salario no disponible, Habilidades: ['Java'], Fecha: 2025-04-04, Inscritos: None
+Descripción: Descripción del puesto Bitácora selecciona Desarrolladores para empresa multinacional líder en el sector financiero, ubicada en Madrid, y en pleno plan de expansión. Las personas seleccionadas se inte...
+Ubicación extraída (HTML): Madrid
+Empresa extraída (HTML): Bitácora S.L.
+Salario extraído (HTML): Salario no disponible
+Fecha extraída: 2025-04-01 (texto: 01 abr)
+No se encontró número de inscritos
+Habilidades (etiquetas): []
+Habilidades totales: ['SQL Server']
+Encontrada oferta: Desarrollador/a de aplicaciones en C# y SQL – contrato indefinido y 60% teletrabajo, URL: https://www.infojobs.net/madrid/desarrollador-aplicaciones-c-sql-contrato-indefinido-60-teletrabajo/of-i7f8ab4e2404a6d9fbe6e59a899da98?applicationOrigin=search-new&page=1&sortBy=RELEVANCE, Empresa: Bitácora S.L., Ubicación: Madrid, Salario: Salario no disponible, Habilidades: ['SQL Server'], Fecha: 2025-04-01, Inscritos: None
+Descripción: Seleccionamos Desarrollador/a JAVA para proyecto en Institución Europea ubicada en Ispra, Italia. Lugar de trabajo: Ispra, Italia. Posibilidad de teletrabajo tres días día a la semana pero residiendo ...
+Ubicación extraída (HTML): Ispra
+Empresa extraída (HTML): abde business consulting
+Salario extraído (HTML): 54.000 € - 58.000 € Bruto/año
+Fecha extraída: 2025-03-17 (texto: 17 mar)
+No se encontró número de inscritos
+Habilidades (etiquetas): []
+Habilidades totales: ['Java']
+Encontrada oferta: Desarrollador/a JAVA (Ispra, Italia), URL: https://www.infojobs.net/ispra/desarrollador-java-ispra-italia/of-i029517d22949a182fd6b26d94424bd?applicationOrigin=search-new&page=1&sortBy=RELEVANCE, Empresa: abde business consulting, Ubicación: Ispra, Salario: 54.000 € - 58.000 € Bruto/año, Habilidades: ['Java'], Fecha: 2025-03-17, Inscritos: None
+Descripción: Buscamos Desarrollador/a Web – Únete a Wisea ¿Te apasiona el desarrollo web y quieres formar parte de una agencia de marketing y publicidad con presencia internacional? En Wisea buscamos un/a Desarrol...
+Ubicación extraída (HTML): Málaga
+Empresa extraída (HTML): Wisea Marketing Digital, sl
+Salario extraído (HTML): Salario no disponible
+Fecha extraída: 2025-03-16 (texto: Hace 25m)
+No se encontró número de inscritos
+Habilidades (etiquetas): []
+Habilidades totales: ['Java']
+Encontrada oferta: Desarrollador/a web, URL: https://www.infojobs.net/malaga/desarrollador-web/of-if7cf1230504eab8333600371f6748f?applicationOrigin=search-new&page=1&sortBy=RELEVANCE, Empresa: Wisea Marketing Digital, sl, Ubicación: Málaga, Salario: Salario no disponible, Habilidades: ['Java'], Fecha: 2025-03-16, Inscritos: None
+Descripción: Traycco es una empresa líder en la distribución de publicidad en el punto de venta y buzoneo en España y Portugal. Con más de 38 años de experiencia, hemos ayudado a marcas y retailers a conectar con ...
+Ubicación extraída (HTML): Cornellà de Llobregat
+Empresa extraída (HTML): OPTIMA SERVICIOS DE MARKETING DIRECTO SL.
+Salario extraído (HTML): Más de 26.000 €
+Fecha extraída: 2025-04-15 (texto: Hace 1h)
+No se encontró número de inscritos
+Habilidades (etiquetas): []
+Habilidades totales: []
+Encontrada oferta: Desarrollador/a Full Stack, URL: https://www.infojobs.net/cornella-de-llobregat/desarrollador-full-stack/of-ia630d54c024881bcd7793fed6be119?applicationOrigin=search-new&page=1&sortBy=RELEVANCE, Empresa: OPTIMA SERVICIOS DE MARKETING DIRECTO SL., Ubicación: Cornellà de Llobregat, Salario: Más de 26.000 €, Habilidades: [], Fecha: 2025-04-15, Inscritos: None
+No se encontró título. HTML de oferta: <li class="ij-List-item"><div aria-label="Publicidad" class="ij-OfferList-banner"><div id="ad-inline_3-wrapper" class="adit-saitama-SaitamaAd" role="complementary"><div id="ad-inline_3" data-google-query-id="CM6dlZ392YwDFV1HHQkdYesRyQ"><div id="google_ads_iframe_/124564242/Infojobs/Infojobs-web_desktop/ij-wde-offer-list-inline_3_0__container__" style="border: 0pt none;"><iframe id="google_ads_iframe_/124564242/Infojobs/Infojobs-web_desktop/ij-wde-offer-list-inline_3_0" name="google_ads_iframe_/1
+Descripción: Desde ICA Informática y Comunicaciones Avanzadas nos encontramos en búsqueda de un/a Desarrollador/a Java Back Spring con experiencia en Microservicios y API REST con 2-3 años de experiencia. Necesari...
+Ubicación extraída (HTML): Madrid
+Empresa extraída (HTML): Grupo ICA
+Salario extraído (HTML): Salario no disponible
+Fecha extraída: 2025-03-16 (texto: Hace 22m)
+No se encontró número de inscritos
+Habilidades (etiquetas): []
+Habilidades totales: ['Java']
+Encontrada oferta: Desarrollador Java con Inglés. ¡Oportunidad en remoto 100%!, URL: https://www.infojobs.net/madrid/desarrollador-java-con-ingles.-oportunidad-remoto-100/of-i392daa82e64969a797506d259e054e?applicationOrigin=search-new&page=1&sortBy=RELEVANCE, Empresa: Grupo ICA, Ubicación: Madrid, Salario: Salario no disponible, Habilidades: ['Java'], Fecha: 2025-03-16, Inscritos: None
+Descripción: Desde Click it point buscamos incorporar un Desarrollador/a Full Stack para trabajar colaborando con uno de nuestros clientes (e-commerce). Imprescindible contar con buen nivel de INGLÉS (nivel conver...
+Ubicación extraída (HTML): Madrid
+Empresa extraída (HTML): CLICKITPOINT
+Salario extraído (HTML): 30.000 € - 36.000 € Bruto/año
+Fecha extraída: 2025-03-16 (texto: Hace 55m)
+No se encontró número de inscritos
+Habilidades (etiquetas): []
+Habilidades totales: ['Java']
+Encontrada oferta: Desarrollador/a Full Stack PHP + JavaScript (NodeJS, Next.js..), URL: https://www.infojobs.net/madrid/desarrollador-full-stack-php-javascript-nodejs-next.js../of-ia3c698aac64106973aeafdd6cf1679?applicationOrigin=search-new&page=1&sortBy=RELEVANCE, Empresa: CLICKITPOINT, Ubicación: Madrid, Salario: 30.000 € - 36.000 € Bruto/año, Habilidades: ['Java'], Fecha: 2025-03-16, Inscritos: None
+Descripción: Desde CMV Consultores estamos buscando incorporar un perfil desarrollador/a Cloud con experiencia trabajando en la Java Virtual machine para un proyecto en colaboración con uno de nuestros principales...
+Ubicación extraída (HTML): Madrid
+Empresa extraída (HTML): CMV Consultores
+Salario extraído (HTML): Más de 30.000 €
+Fecha extraída: 2025-04-15 (texto: Hace 1h)
+No se encontró número de inscritos
+Habilidades (etiquetas): []
+Habilidades totales: ['Kubernetes', 'Redis', 'Java', 'Kotlin']
+Encontrada oferta: Desarrollador/a Cloud, URL: https://www.infojobs.net/madrid/desarrollador-cloud/of-i0d4862abf640eeb6a1a69c5fa00321?applicationOrigin=search-new&page=1&sortBy=RELEVANCE, Empresa: CMV Consultores, Ubicación: Madrid, Salario: Más de 30.000 €, Habilidades: ['Kubernetes', 'Redis', 'Java', 'Kotlin'], Fecha: 2025-04-15, Inscritos: None
+Descripción: Porque trabajar en Sopra Steria, también es sentir Sopra Steria. Somos un reconocido líder europeo en consultoría, servicios digitales y desarrollo de software, con cerca de 56.000 empleados en casi 3...
+Ubicación extraída (HTML): Algeciras
+Empresa extraída (HTML): Sopra Steria
+Salario extraído (HTML): Salario no disponible
+Fecha extraída: 2025-04-15 (texto: Hace 1h)
+No se encontró número de inscritos
+Habilidades (etiquetas): []
+Habilidades totales: ['Java']
+Encontrada oferta: Desarrollador/a backend java, URL: https://www.infojobs.net/algeciras/desarrollador-backend-java/of-i3e34228f574a19bafa2c81f5ceb3a8?applicationOrigin=search-new&page=1&sortBy=RELEVANCE, Empresa: Sopra Steria, Ubicación: Algeciras, Salario: Salario no disponible, Habilidades: ['Java'], Fecha: 2025-04-15, Inscritos: None
+Descripción: Porque trabajar en Sopra Steria, también es sentir Sopra Steria. Somos un reconocido líder europeo en consultoría, servicios digitales y desarrollo de software, con cerca de 56.000 empleados en casi 3...
+Ubicación extraída (HTML): Sevilla
+Empresa extraída (HTML): Sopra Steria
+Salario extraído (HTML): Salario no disponible
+Fecha extraída: 2025-04-15 (texto: Hace 1h)
+No se encontró número de inscritos
+Habilidades (etiquetas): []
+Habilidades totales: ['Java']
+Encontrada oferta: Desarrollador/a backend java, URL: https://www.infojobs.net/sevilla/desarrollador-backend-java/of-i310b6390a14b2fbf5415a463526020?applicationOrigin=search-new&page=1&sortBy=RELEVANCE, Empresa: Sopra Steria, Ubicación: Sevilla, Salario: Salario no disponible, Habilidades: ['Java'], Fecha: 2025-04-15, Inscritos: None
+No se encontró título. HTML de oferta: <li class="ij-List-item"><div aria-label="Publicidad" class="ij-OfferList-banner"><div id="ad-inline_4-wrapper" class="adit-saitama-SaitamaAd" role="complementary"><div id="ad-inline_4" data-google-query-id="CM-dlZ392YwDFV1HHQkdYesRyQ"><div id="google_ads_iframe_/124564242/Infojobs/Infojobs-web_desktop/ij-wde-offer-list-inline_4_0__container__" style="border: 0pt none;"><iframe id="google_ads_iframe_/124564242/Infojobs/Infojobs-web_desktop/ij-wde-offer-list-inline_4_0" name="google_ads_iframe_/1
+Descripción: Buscamos incorporar al equipo un desarrollador@ en .NET, con iniciativa, ganas de descubrir nuevas tecnologías y capaz de poder explicar los beneficios de estas. Requerimientos mínimos: - Experiencia ...
+Ubicación extraída (HTML): Andorra La Vella
+Empresa extraída (HTML): R & C Associats
+Salario extraído (HTML): Salario no disponible
+Fecha extraída: 2025-04-15 (texto: Hace 4h)
+No se encontró número de inscritos
+Habilidades (etiquetas): []
+Habilidades totales: ['.NET', 'Docker', 'Java', 'Angular']
+Encontrada oferta: DESARROLLADOR/A .NET, URL: https://www.infojobs.net/andorra-la-vella/desarrollador-.net/of-i6363ff41b44427ba0cab306b198773?applicationOrigin=search-new&page=1&sortBy=RELEVANCE, Empresa: R & C Associats, Ubicación: Andorra La Vella, Salario: Salario no disponible, Habilidades: ['.NET', 'Docker', 'Java', 'Angular'], Fecha: 2025-04-15, Inscritos: None
+Descripción: Desde Second Window estamos en búsqueda de un perfil de Salesforce Developer con experiencia en la nube de Marketing Cloud, para incorporar a una posición, estable, 100% remoto y a largo plazo en uno ...
+Ubicación extraída (HTML): Madrid
+Empresa extraída (HTML): Second Window
+Salario extraído (HTML): 33.000 € - 43.000 € Bruto/año
+Fecha extraída: 2025-04-15 (texto: Hace 4h)
+No se encontró número de inscritos
+Habilidades (etiquetas): []
+Habilidades totales: ['Java']
+Encontrada oferta: Desarrollador Salesforce Marketing Cloud (inglés alto) - 100% teletrabajo, toda España, URL: https://www.infojobs.net/madrid/desarrollador-salesforce-marketing-cloud-ingles-alto-100-teletrabajo-toda-espana/of-i708797211545da8ff8f59dfb2cdb61?applicationOrigin=search-new&page=1&sortBy=RELEVANCE, Empresa: Second Window, Ubicación: Madrid, Salario: 33.000 € - 43.000 € Bruto/año, Habilidades: ['Java'], Fecha: 2025-04-15, Inscritos: None
+Descripción: ¿Cómo vas a afrontar tu desarrollo profesional? En Arelance sabemos que las personas son el activo más importante dentro de una empresa, por ello invertimos tiempo y dedicación para encontrar los mejo...
+Ubicación extraída (HTML): Málaga
+Empresa extraída (HTML): ARELANCE
+Salario extraído (HTML): 33.000 € - 39.000 € Bruto/año
+Fecha extraída: 2025-04-15 (texto: Hace 4h)
+No se encontró número de inscritos
+Habilidades (etiquetas): []
+Habilidades totales: ['Java', 'Angular']
+Encontrada oferta: Desarrollador/a Fullstack Angular JAVA, URL: https://www.infojobs.net/malaga/desarrollador-fullstack-angular-java/of-i2e2cec9b31432083d6f1a4d022f312?applicationOrigin=search-new&page=1&sortBy=RELEVANCE, Empresa: ARELANCE, Ubicación: Málaga, Salario: 33.000 € - 39.000 € Bruto/año, Habilidades: ['Java', 'Angular'], Fecha: 2025-04-15, Inscritos: None
+No se encontró título. HTML de oferta: <li class="ij-List-item"><a class="ij-BaseTypography ij-BaseTypography-gray-D2 ij-Text ij-Text-body1 ij-Footer-link" href="https://ayuda.infojobs.net" title="Ayuda" type="mobile">Ayuda</a></li>
+No se encontró título. HTML de oferta: <li class="ij-List-item"><a class="ij-BaseTypography ij-BaseTypography-gray-D2 ij-Text ij-Text-body1 ij-Footer-link" href="https://nosotros.infojobs.net/infojobs-seguridad" title="Seguridad">Seguridad</a></li>
+No se encontró título. HTML de oferta: <li class="ij-List-item"><a class="ij-BaseTypography ij-BaseTypography-gray-D2 ij-Text ij-Text-body1 ij-Footer-link" href="https://www.infojobs.net/lex.xhtml" title="Condiciones legales" type="mobile">Condiciones legales</a></li>
+No se encontró título. HTML de oferta: <li class="ij-List-item"><a class="ij-BaseTypography ij-BaseTypography-gray-D2 ij-Text ij-Text-body1 ij-Footer-link" href="https://www.infojobs.net/privacy-policy/extended.xhtml" title="Política de Privacidad">Política de Privacidad</a></li>
+No se encontró título. HTML de oferta: <li class="ij-List-item"><a class="ij-BaseTypography ij-BaseTypography-gray-D2 ij-Text ij-Text-body1 ij-Footer-link" href="https://www.infojobs.net/rules-and-services.xhtml" title="Reglas de uso y características de servicio de InfoJobs">Uso del servicio</a></li>
+No se encontró título. HTML de oferta: <li class="ij-List-item"><a class="ij-BaseTypography ij-BaseTypography-gray-D2 ij-Text ij-Text-body1 ij-Footer-link" href="https://www.infojobs.net/lex.xhtml#cookies-policy" title="Política de cookies">Política de cookies</a></li>
+No se encontró título. HTML de oferta: <li class="ij-List-item"><button class="ij-BaseTypography ij-BaseTypography-gray-D2 ij-Text ij-Text-body1 ij-Footer-link">Gestionar preferencias y cookies</button></li>
+No se encontró título. HTML de oferta: <li class="ij-List-item"><a class="ij-BaseTypography ij-BaseTypography-gray-D2 ij-Text ij-Text-body1 ij-Footer-link" href="https://nosotros.infojobs.net" title="El equipo y la filosofía de la empresa">InfoJobs hoy</a></li>
+No se encontró título. HTML de oferta: <li class="ij-List-item"><a class="ij-BaseTypography ij-BaseTypography-gray-D2 ij-Text ij-Text-body1 ij-Footer-link" href="https://adevinta-spain.ofertas-trabajo.infojobs.net/" title="¿Quieres formar parte de nuestro equipo?">Trabaja con nosotros</a></li>
+No se encontró título. HTML de oferta: <li class="ij-List-item"><a class="ij-BaseTypography ij-BaseTypography-gray-D2 ij-Text ij-Text-body1 ij-Footer-link" href="https://www.infojobs.net/ofertas-empleo" title="Buscar ofertas de empleo">Ofertas de empleo</a></li>
+No se encontró título. HTML de oferta: <li class="ij-List-item"><a class="ij-BaseTypography ij-BaseTypography-gray-D2 ij-Text ij-Text-body1 ij-Footer-link" href="https://awards.infojobs.net" title="InfoJobs Awards">InfoJobs Awards</a></li>
+No se encontró título. HTML de oferta: <li class="ij-List-item"><a class="ij-BaseTypography ij-BaseTypography-gray-D2 ij-Text ij-Text-body1 ij-Footer-link" href="https://infojobsacademy.com" title="InfoJobs Academy">InfoJobs Academy</a></li>
+No se encontró título. HTML de oferta: <li class="ij-List-item"><a class="ij-BaseTypography ij-BaseTypography-gray-D2 ij-Text ij-Text-body1 ij-Footer-link" href="https://orientacion-laboral.infojobs.net" title="Orientación laboral y coaching en la búsqueda de empleo">Orientación laboral</a></li>
+No se encontró título. HTML de oferta: <li class="ij-List-item"><a class="ij-BaseTypography ij-BaseTypography-gray-D2 ij-Text ij-Text-body1 ij-Footer-link" href="https://formacion.infojobs.net/" title="Encuentra un curso para ti" rel="nofollow">InfoJobs Formación</a></li>
+No se encontró título. HTML de oferta: <li class="ij-List-item"><a class="ij-BaseTypography ij-BaseTypography-gray-D2 ij-Text ij-Text-body1 ij-Footer-link" href="https://recursos-humanos.infojobs.net" title="Blog empresas">Blog empresas</a></li>
+No se encontró título. HTML de oferta: <li class="ij-List-item"><a class="ij-BaseTypography ij-BaseTypography-gray-D2 ij-Text ij-Text-body1 ij-Footer-link" href="https://www.infojobs.it" title="Accedi a InfoJobs.it">Offerte di lavoro in Italia</a></li>
+No se encontró título. HTML de oferta: <li class="ij-List-item"><a class="ij-BaseTypography ij-BaseTypography-gray-D2 ij-Text ij-Text-body1 ij-Footer-link" href="https://nosotros.infojobs.net/prensa/indicadores-infojobs" title="El barómetro en el mercado laboral">Indicadores de InfoJobs</a></li>
+No se encontró título. HTML de oferta: <li class="ij-List-item"><a class="ij-BaseTypography ij-BaseTypography-gray-D2 ij-Text ij-Text-body1 ij-Footer-link" href="https://nosotros.infojobs.net/prensa/notas-prensa" title="Notas de prensa publicadas por InfoJobs">Notas de prensa</a></li>
+No se encontró título. HTML de oferta: <li class="ij-List-item"><a class="ij-BaseTypography ij-BaseTypography-gray-D2 ij-Text ij-Text-body1 ij-Footer-link" href="https://nosotros.infojobs.net/contacto-prensa" title="Contacto de prensa">Contacto de prensa</a></li>
+No se encontró título. HTML de oferta: <li class="ij-List-item"><a class="ij-BaseTypography ij-BaseTypography-gray-D2 ij-Text ij-Text-caption ij-Footer-link" href="https://www.jobisjob.es" title="JobisJob">JobisJob</a></li>
+No se encontró título. HTML de oferta: <li class="ij-List-item ij-Footer-linkSeparator"></li>
+No se encontró título. HTML de oferta: <li class="ij-List-item"><a class="ij-BaseTypography ij-BaseTypography-gray-D2 ij-Text ij-Text-caption ij-Footer-link" href="https://www.fotocasa.es/es" title="Fotocasa">Fotocasa</a></li>
+No se encontró título. HTML de oferta: <li class="ij-List-item ij-Footer-linkSeparator"></li>
+No se encontró título. HTML de oferta: <li class="ij-List-item"><a class="ij-BaseTypography ij-BaseTypography-gray-D2 ij-Text ij-Text-caption ij-Footer-link" href="https://www.habitaclia.com" title="habitaclia">habitaclia</a></li>
+Nueva oferta guardada: Desarrollador Backend .Net Senior
+Nueva oferta guardada: Desarrollador/a Java SpringBoot y AngularJS Madrid Teletrabajo
+Nueva oferta guardada: Desarrollador/a Senior Angular con inglés C1 - 100% Teletrabajo
+Nueva oferta guardada: Desarrollador .Net Full Stack
+Nueva oferta guardada: Desarrollador/a Android Kotlin senior | 100% TELETRABAJO
+Nueva oferta guardada: DESARROLLADOR/A SW DE SISTEMAS CRITICOS DISTRIBUIDOS
+Nueva oferta guardada: Desarrollador/a Fullstack Java y Golang | 100% TELETRABAJO
+Nueva oferta guardada: Desarrollador/a Drupal 10 | 100% TELETRABAJO
+Nueva oferta guardada: Desarrollador/a Java / Python /ShellScript / Inglés
+Nueva oferta guardada: Desarrollador/a de aplicaciones en C# y SQL – contrato indefinido y 60% teletrabajo
+Nueva oferta guardada: Desarrollador/a JAVA (Ispra, Italia)
+Nueva oferta guardada: Desarrollador/a web
+Nueva oferta guardada: Desarrollador/a Full Stack
+Nueva oferta guardada: Desarrollador Java con Inglés. ¡Oportunidad en remoto 100%!
+Nueva oferta guardada: Desarrollador/a Full Stack PHP + JavaScript (NodeJS, Next.js..)
+Nueva oferta guardada: Desarrollador/a Cloud
+Nueva oferta guardada: Desarrollador/a backend java
+Nueva oferta guardada: Desarrollador/a backend java
+Nueva oferta guardada: DESARROLLADOR/A .NET
+Nueva oferta guardada: Desarrollador Salesforce Marketing Cloud (inglés alto) - 100% teletrabajo, toda España
+Nueva oferta guardada: Desarrollador/a Fullstack Angular JAVA
+Scraping de InfoJobs completado: 21 ofertas procesadas.

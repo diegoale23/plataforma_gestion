@@ -1,4 +1,3 @@
-# market_analysis/scraping/infojobs_scraper.py
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -39,13 +38,14 @@ class InfojobsScraper(BaseScraper):
             self.captcha_solver = TwoCaptcha(api_key)
             logger.debug("2Captcha inicializado correctamente.")
         except Exception as e:
-            logger.error(f"Error al inicializar 2Captcha: {e}. Verifica TWOCAPTCHA_API_KEY en .env.")
+            logger.error(f"Error al inicializar 2Captcha: {e}. Verifica que TWOCAPTCHA_API_KEY esté definida y correcta en .env (puedes obtener una en https://2captcha.com/).")
             self.captcha_solver = None
 
     def parse_relative_date(self, text):
-        """Convierte un texto como 'Hace 6d' o 'Hace 19h' en una fecha absoluta."""
+        """Convierte un texto como 'Hace 6d', 'Hace 19h' o '08 abr' en una fecha absoluta."""
         today = timezone.now().date()
         try:
+            # Formato relativo: 'Hace Xd' o 'Hace Xh'
             match = re.match(r'Hace (\d+)([dh])', text, re.IGNORECASE)
             if match:
                 value, unit = int(match.group(1)), match.group(2).lower()
@@ -53,9 +53,26 @@ class InfojobsScraper(BaseScraper):
                     return today - timedelta(days=value)
                 elif unit == 'h':
                     return today if value < 24 else today - timedelta(days=1)
+            
+            # Formato 'DD MMM' (e.g., '08 abr')
+            match = re.match(r'(\d{1,2})\s*(ene|feb|mar|abr|may|jun|jul|ago|sep|oct|nov|dic)', text, re.IGNORECASE)
+            if match:
+                day, month_str = int(match.group(1)), match.group(2).lower()
+                month_map = {
+                    'ene': 1, 'feb': 2, 'mar': 3, 'abr': 4, 'may': 5, 'jun': 6,
+                    'jul': 7, 'ago': 8, 'sep': 9, 'oct': 10, 'nov': 11, 'dic': 12
+                }
+                month = month_map.get(month_str)
+                if month:
+                    year = today.year
+                    parsed_date = datetime(year, month, day).date()
+                    if parsed_date > today:
+                        parsed_date = datetime(year - 1, month, day).date()
+                    return parsed_date
+                logger.debug(f"Mes no reconocido en '{text}'")
         except Exception as e:
-            logger.debug(f"Error al parsear fecha relativa '{text}': {e}")
-        return today - timedelta(days=30)  # Valor por defecto
+            logger.debug(f"Error al parsear fecha '{text}': {e}")
+        return today - timedelta(days=30)
 
     def fetch_offers(self, query="desarrollador", location="España", max_offers=50):
         offers = []
@@ -69,7 +86,6 @@ class InfojobsScraper(BaseScraper):
         normalized_location = location.lower().replace(" ", "-")
         search_url = f"{self.base_url}/jobsearch/search-results/list.xhtml?keyword={query}&provinceIds={province_id}&normalizedLocation={normalized_location}"
 
-        # Configurar Selenium
         chrome_options = Options()
         chrome_options.add_experimental_option("detach", True)
         chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
@@ -94,11 +110,9 @@ class InfojobsScraper(BaseScraper):
             logger.info(f"Obteniendo ofertas para query='{query}', location='{location}'")
             driver.get(search_url)
             
-            # Simular comportamiento humano
             time.sleep(random.uniform(3, 5))
             ActionChains(driver).move_by_offset(random.randint(50, 200), random.randint(50, 200)).perform()
             
-            # Detectar CAPTCHA (GeeTest)
             max_captcha_attempts = 3
             for attempt in range(max_captcha_attempts):
                 if "Eres humano o un robot" in driver.page_source:
@@ -153,7 +167,7 @@ class InfojobsScraper(BaseScraper):
                                     logger.info("CAPTCHA resuelto con 2Captcha.")
                                     break
                         except Exception as e:
-                            logger.error(f"Error al resolver CAPTCHA con 2Captcha: {e}. Verifica TWOCAPTCHA_API_KEY en .env.")
+                            logger.error(f"Error al resolver CAPTCHA con 2Captcha: {e}. Verifica que TWOCAPTCHA_API_KEY esté definida y correcta en .env (puedes obtener una en https://2captcha.com/).")
                             with open('debug_captcha.html', 'w', encoding='utf-8') as f:
                                 f.write(driver.page_source)
                             logger.warning("Pasando a resolución manual.")
@@ -173,7 +187,6 @@ class InfojobsScraper(BaseScraper):
                     f.write(driver.page_source)
                 return offers
 
-            # Manejar banner de cookies
             try:
                 cookie_button = WebDriverWait(driver, 10).until(
                     EC.element_to_be_clickable((By.ID, "didomi-notice-agree-button"))
@@ -183,7 +196,6 @@ class InfojobsScraper(BaseScraper):
             except:
                 logger.debug("No se encontró banner de cookies.")
 
-            # Esperar a que las ofertas carguen
             try:
                 WebDriverWait(driver, 15).until(
                     EC.presence_of_all_elements_located((By.CSS_SELECTOR, 'li.ij-List-item'))
@@ -195,7 +207,6 @@ class InfojobsScraper(BaseScraper):
                     f.write(driver.page_source)
                 return offers
 
-            # Scroll suave para cargar más ofertas
             for _ in range(5):
                 driver.execute_script("window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});")
                 time.sleep(random.uniform(2, 4))
@@ -210,10 +221,8 @@ class InfojobsScraper(BaseScraper):
                     logger.debug("No se encontró botón 'Mostrar más'.")
                     break
 
-            # Simular interacción adicional
             ActionChains(driver).move_by_offset(random.randint(-100, 100), random.randint(-100, 100)).perform()
             
-            # Procesar HTML con Selenium
             try:
                 job_cards = driver.find_elements(By.CSS_SELECTOR, 'li.ij-List-item:not(.ij-OfferList-banner):not(.ij-CampaignsLogosSimple)')
                 logger.debug(f"Se encontraron {len(job_cards)} elementos li.ij-List-item")
@@ -227,7 +236,6 @@ class InfojobsScraper(BaseScraper):
                 valid_offer_found = False
                 for job in job_cards[:max_offers]:
                     try:
-                        # Extraer título
                         title_text = "Sin título"
                         url = None
                         try:
@@ -239,7 +247,6 @@ class InfojobsScraper(BaseScraper):
                             logger.debug(f"No se encontró título. HTML de oferta: {job.get_attribute('outerHTML')[:500]}")
                             continue
 
-                        # Extraer descripción
                         description_text = ""
                         try:
                             description_elem = job.find_element(By.CSS_SELECTOR, 'p.ij-OfferCardContent-description-description')
@@ -248,14 +255,12 @@ class InfojobsScraper(BaseScraper):
                         except:
                             logger.debug("No se encontró descripción")
 
-                        # Extraer ubicación
                         location_text = "Sin ubicación"
                         try:
                             location_elem = job.find_element(By.CSS_SELECTOR, 'span.ij-OfferCardContent-description-list-item-truncate')
                             location_text = location_elem.text.strip()
                             logger.debug(f"Ubicación extraída (HTML): {location_text}")
                         except:
-                            # Respaldo: parsear descripción
                             location_match = re.search(r'(?:Ubicación|Ubicacion|Localidad):\s*([A-Za-z\s]+)', description_text, re.IGNORECASE)
                             if location_match:
                                 location_text = location_match.group(1).strip()
@@ -271,7 +276,6 @@ class InfojobsScraper(BaseScraper):
                                         logger.debug(f"Ubicación por palabra clave: {location_text}")
                                         break
 
-                        # Extraer empresa
                         company_text = "Sin compañía"
                         try:
                             company_elem = job.find_element(By.CSS_SELECTOR, 'a.ij-OfferCardContent-description-subtitle-link')
@@ -279,26 +283,22 @@ class InfojobsScraper(BaseScraper):
                             logger.debug(f"Empresa extraída (HTML): {company_text}")
                         except:
                             logger.debug("No se encontró empresa en HTML (selector: a.ij-OfferCardContent-description-subtitle-link)")
-                            # Respaldo: parsear descripción
                             company_match = re.search(r'(?:Acerca de|Empresa:|\bEn\s+)([A-Za-z0-9\s&-]+?)(?:\s+\w{3,}|\s*[,.\n])', description_text, re.IGNORECASE)
                             if company_match:
                                 company_text = company_match.group(1).strip()
                                 logger.debug(f"Empresa extraída (descripción): {company_text}")
 
-                        # Extraer salario
                         salary_text = None
                         try:
                             salary_elem = job.find_element(By.CSS_SELECTOR, 'span[class*="salary"]')
                             salary_text = salary_elem.text.strip()
                             logger.debug(f"Salario extraído (HTML): {salary_text}")
                         except:
-                            # Respaldo: parsear descripción
                             salary_match = re.search(r'(?:Salario|Sueldo):\s*([\d\s.k€-]+)', description_text, re.IGNORECASE)
                             if salary_match:
                                 salary_text = salary_match.group(1).strip()
                                 logger.debug(f"Salario extraído (descripción): {salary_text}")
 
-                        # Extraer fecha
                         pub_date = one_month_ago
                         try:
                             date_elem = job.find_element(By.CSS_SELECTOR, 'span.ij-FormatterSincedate')
@@ -308,7 +308,17 @@ class InfojobsScraper(BaseScraper):
                         except:
                             logger.debug("No se encontró fecha en HTML (selector: span.ij-FormatterSincedate)")
 
-                        # Extraer habilidades
+                        applicants_count = None
+                        try:
+                            applicants_elem = job.find_element(By.CSS_SELECTOR, 'span.ij-OfferCardContent-description-list-item')
+                            applicants_text = applicants_elem.text.strip()
+                            match = re.search(r'(\d+)\s*inscrito?s?', applicants_text, re.IGNORECASE)
+                            if match:
+                                applicants_count = int(match.group(1))
+                                logger.debug(f"Inscritos extraídos: {applicants_count}")
+                        except:
+                            logger.debug("No se encontró número de inscritos")
+
                         skills = []
                         try:
                             skills_elems = job.find_elements(By.CSS_SELECTOR, 'span.sui-MoleculeTag-label')
@@ -317,7 +327,6 @@ class InfojobsScraper(BaseScraper):
                         except:
                             logger.debug("No se encontraron habilidades en etiquetas")
 
-                        # Habilidades desde descripción
                         skill_keywords = [
                             '.NET', 'ASP.NET', 'Kubernetes', 'Docker', 'MongoDB', 'SQL Server',
                             'Redis', 'OAuth', 'JWT', 'OpenID', 'ETL', 'OpenAPI', 'Java',
@@ -337,12 +346,12 @@ class InfojobsScraper(BaseScraper):
                             'salary_range': salary_text[:255] if salary_text else None,
                             'description': description_text[:2000],
                             'skills': list(set(skills)),
+                            'applicants_count': applicants_count,
                             'raw_data': {'html_snippet': job.get_attribute('outerHTML')[:1000]}
                         }
                         offers.append(offer_data)
-                        logger.debug(f"Encontrada oferta: {title_text}, URL: {url}, Empresa: {company_text}, Ubicación: {location_text}, Salario: {salary_text}, Habilidades: {skills}, Fecha: {pub_date}")
+                        logger.debug(f"Encontrada oferta: {title_text}, URL: {url}, Empresa: {company_text}, Ubicación: {location_text}, Salario: {salary_text}, Habilidades: {skills}, Fecha: {pub_date}, Inscritos: {applicants_count}")
 
-                        # Guardar HTML de la primera oferta válida
                         if not valid_offer_found:
                             with open('debug_offer.html', 'w', encoding='utf-8') as f:
                                 f.write(job.get_attribute('outerHTML'))
@@ -358,7 +367,6 @@ class InfojobsScraper(BaseScraper):
                     f.write(driver.page_source)
 
         finally:
-            # No cerrar el navegador para depuración
             pass
 
         return offers[:max_offers]
@@ -395,7 +403,7 @@ class InfojobsScraper(BaseScraper):
                     'salary_range': offer_details.get('salary_range')[:255] if offer_details.get('salary_range') else None,
                     'publication_date': offer_details.get('publication_date'),
                     'source': source,
-                    'applicants_count': offer_details.get('applicants_count', 0),
+                    'applicants_count': offer_details.get('applicants_count', None),
                     'raw_data': offer_details.get('raw_data', {}),
                     'is_active': True
                 }

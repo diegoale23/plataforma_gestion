@@ -5,4 +5,5 @@ from . import views
 urlpatterns = [
     path('dashboard/', views.market_dashboard, name='market_dashboard'),
     path('offers/', views.job_offer_list, name='job_offer_list'),
+    path('export-skills-report/', views.export_skills_report, name='export_skills_report'),
 ]

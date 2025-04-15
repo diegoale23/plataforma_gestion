@@ -1,8 +1,5 @@
-# market_analysis/models.py
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-
-# Importar Skill desde la app 'users'
 from users.models import Skill
 
 class JobSource(models.Model):
@@ -47,18 +44,18 @@ class JobOffer(models.Model):
         _("Fecha de Publicación"),
         null=True,
         blank=True,
-        db_index=True # Indexar para búsquedas/ordenación por fecha
+        db_index=True
     )
     url = models.URLField(
         _("URL Original"),
-        unique=True, # Evita duplicados exactos de la misma oferta
-        max_length=500 # Aumentar longitud por si acaso
+        unique=True,
+        max_length=500
     )
     source = models.ForeignKey(
         JobSource,
-        on_delete=models.SET_NULL, # Si se borra la fuente, mantener la oferta
+        on_delete=models.SET_NULL,
         null=True,
-        blank=True, # Podría haber ofertas sin fuente definida (ej. manuales)
+        blank=True,
         related_name='job_offers',
         verbose_name=_("Fuente")
     )
@@ -68,6 +65,14 @@ class JobOffer(models.Model):
         blank=True,
         help_text=_("Si la fuente proporciona esta información.")
     )
+    industry = models.CharField(
+        _("Industria/Sector"),
+        max_length=100,
+        blank=True,
+        null=True,
+        db_index=True,
+        help_text=_("Ej: Tecnología, Finanzas, Salud")
+    )
     raw_data = models.JSONField(
         _("Datos Crudos (JSON)"),
         blank=True,
@@ -76,23 +81,24 @@ class JobOffer(models.Model):
     )
     scraped_at = models.DateTimeField(_("Fecha de Extracción/Integración"), auto_now_add=True)
     updated_at = models.DateTimeField(_("Última Actualización (en BD)"), auto_now=True)
-    is_active = models.BooleanField(_("¿Oferta Activa?"), default=True, help_text=_("Indica si la oferta aún se considera vigente."))
-
+    is_active = models.BooleanField(
+        _("¿Oferta Activa?"),
+        default=True,
+        help_text=_("Indica si la oferta aún se considera vigente.")
+    )
 
     class Meta:
         verbose_name = _("Oferta de Empleo")
         verbose_name_plural = _("Ofertas de Empleo")
-        # Ordenar por fecha de publicación más reciente, luego por fecha de extracción
         ordering = ['-publication_date', '-scraped_at']
         indexes = [
             models.Index(fields=['-publication_date', '-scraped_at']),
-            models.Index(fields=['location', 'company']),
+            models.Index(fields=['location', 'company', 'industry']),
         ]
 
     def __str__(self):
         company_name = self.company or _("Empresa Desconocida")
         return f"{self.title} @ {company_name}"
-
 
 class MarketTrend(models.Model):
     """Almacena análisis agregados o predicciones sobre el mercado laboral."""
@@ -104,8 +110,6 @@ class MarketTrend(models.Model):
     )
     region = models.CharField(_("Región"), max_length=100, blank=True, null=True, db_index=True)
     industry = models.CharField(_("Industria/Sector"), max_length=100, blank=True, null=True, db_index=True)
-    # Guarda un JSON con las habilidades y su tendencia o demanda
-    # Ej: {'Python': {'trend': 'up', 'score': 1.5}, 'Java': {'trend': 'stable', 'score': 0.1}}
     skill_trends = models.JSONField(_("Tendencias de Habilidades"))
     source_description = models.CharField(
         _("Fuente de los Datos"),
