@@ -1,3 +1,6 @@
-2025/04/15-12:26:16.624 39bc Reusing MANIFEST C:\xampp\htdocs\plataforma_gestion\plataforma_gestion\chrome_profile_infojobs\Default\Session Storage/MANIFEST-000001
-2025/04/15-12:26:16.626 39bc Recovering log #4
-2025/04/15-12:26:16.629 39bc Reusing old log C:\xampp\htdocs\plataforma_gestion\plataforma_gestion\chrome_profile_infojobs\Default\Session Storage/000004.log 
+2025/04/15-12:36:25.793 3178 Reusing MANIFEST C:\xampp\htdocs\plataforma_gestion\plataforma_gestion\chrome_profile_infojobs\Default\Session Storage/MANIFEST-000001
+2025/04/15-12:36:25.795 3178 Recovering log #4
+2025/04/15-12:36:25.801 3178 Reusing old log C:\xampp\htdocs\plataforma_gestion\plataforma_gestion\chrome_profile_infojobs\Default\Session Storage/000004.log 
+2025/04/15-12:36:32.147 23d4 Level-0 table #8: started
+2025/04/15-12:36:32.154 23d4 Level-0 table #8: 9252 bytes OK
+2025/04/15-12:36:32.162 23d4 Delete type=0 #4
