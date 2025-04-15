@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Count
+from django.db.models import Count, Q  # Añadimos Count
 from market_analysis.models import JobOffer, JobSource
 from users.models import Skill
 from .scraping.tecnoempleo_scraper import TecnoempleoScraper
@@ -121,8 +121,23 @@ def market_dashboard(request):
 
 @login_required
 def job_offer_list(request):
-    offers = JobOffer.objects.filter(is_active=True).order_by('-publication_date')
-    return render(request, 'market_analysis/job_offer_list.html', {'offers': offers})
+    query = request.GET.get('query', '').strip()
+    offers = JobOffer.objects.filter(is_active=True)
+
+    if query:
+        offers = offers.filter(
+            Q(title__icontains=query) |
+            Q(company__icontains=query) |
+            Q(location__icontains=query) |
+            Q(publication_date__icontains=query)
+        )
+
+    offers = offers.order_by('-publication_date')
+    context = {
+        'offers': offers,
+        'query': query,
+    }
+    return render(request, 'market_analysis/job_offer_list.html', context)
 
 @login_required
 def export_skills_report(request):
@@ -131,10 +146,8 @@ def export_skills_report(request):
         .annotate(num_offers=Count('job_offers'))
         .order_by('-num_offers')[:10]
     )
-
     skills = [skill.name for skill in top_skills]
     counts = [skill.num_offers for skill in top_skills]
-
     plt.figure(figsize=(10, 6))
     plt.bar(skills, counts, color='teal')
     plt.title('Habilidades Más Demandadas')
@@ -142,12 +155,10 @@ def export_skills_report(request):
     plt.ylabel('Número de Ofertas')
     plt.xticks(rotation=45)
     plt.tight_layout()
-
     buf = io.BytesIO()
     plt.savefig(buf, format='png')
     plt.close()
     buf.seek(0)
-
     response = HttpResponse(buf, content_type='image/png')
     response['Content-Disposition'] = 'attachment; filename="skills_report.png"'
     return response
