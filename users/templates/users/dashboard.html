@@ -1,25 +1,31 @@
-<!-- users/templates/users/dashboard.html -->
 {% extends 'base.html' %}
 {% block content %}
   <div class="container mt-5">
-    <h2>Bienvenido, {{ user.username }}</h2>
-    <p>Rol: {{ user_role }}</p>
-    <div class="row">
+    <!-- Bienvenido y Rol en la parte superior derecha -->
+    <div class="d-flex justify-content-end align-items-center mb-4">
+      <div class="text-end">
+        <p class="mb-0" style="font-size: 1.2rem;">Bienvenido, <strong>{{ user.username }}</strong></p>
+        <p class="mb-0" style="font-size: 1rem;">Rol: <strong>{{ user_role }}</strong></p>
+      </div>
+    </div>
+
+    <!-- Opciones del Dashboard -->
+    <div class="row g-4">
       {% if user_role == 'Administrador' %}
         <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
+          <div class="card shadow-sm border-0 bg-light">
+            <div class="card-body text-center">
               <h5 class="card-title">Gestión de Usuarios</h5>
-              <p>Administra usuarios y sus roles.</p>
+              <p class="card-text">Administra usuarios y sus roles.</p>
               <a href="{% url 'manage_users' %}" class="btn btn-primary">Ir</a>
             </div>
           </div>
         </div>
         <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
+          <div class="card shadow-sm border-0 bg-light">
+            <div class="card-body text-center">
               <h5 class="card-title">Gestión de Proyectos</h5>
-              <p>Crea y gestiona proyectos.</p>
+              <p class="card-text">Crea y gestiona proyectos.</p>
               <a href="{% url 'project_list' %}" class="btn btn-primary">Ir</a>
             </div>
           </div>
@@ -27,10 +33,10 @@
       {% endif %}
       {% if user_role == 'Gestor de Proyectos' %}
         <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
+          <div class="card shadow-sm border-0 bg-light">
+            <div class="card-body text-center">
               <h5 class="card-title">Mis Proyectos</h5>
-              <p>Crea y gestiona tus proyectos.</p>
+              <p class="card-text">Crea y gestiona tus proyectos.</p>
               <a href="{% url 'project_list' %}" class="btn btn-primary">Ir</a>
             </div>
           </div>
@@ -38,60 +44,64 @@
       {% endif %}
       {% if user_role == 'Colaborador' %}
         <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
+          <div class="card shadow-sm border-0 bg-light">
+            <div class="card-body text-center">
               <h5 class="card-title">Mis Tareas</h5>
-              <p>Revisa y completa tus tareas.</p>
+              <p class="card-text">Revisa y completa tus tareas.</p>
               <a href="{% url 'task_list' %}" class="btn btn-primary">Ir</a>
             </div>
           </div>
         </div>
         <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
+          <div class="card shadow-sm border-0 bg-light">
+            <div class="card-body text-center">
               <h5 class="card-title">Recomendaciones</h5>
-              <p>Tareas recomendadas según tus habilidades.</p>
+              <p class="card-text">Tareas recomendadas según tus habilidades.</p>
               <a href="{% url 'recommendations' %}" class="btn btn-primary">Ver Todas</a>
             </div>
           </div>
         </div>
       {% endif %}
       <div class="col-md-4">
-        <div class="card">
-          <div class="card-body">
+        <div class="card shadow-sm border-0 bg-light">
+          <div class="card-body text-center">
             <h5 class="card-title">Análisis del Mercado</h5>
-            <p>Explora tendencias y demandas del mercado laboral.</p>
+            <p class="card-text">Explora tendencias y demandas del mercado laboral.</p>
             <a href="{% url 'market_dashboard' %}" class="btn btn-primary">Ir</a>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Tareas Recomendadas -->
     {% if user_role == 'Colaborador' and recommendations %}
-      <div class="card mt-4">
-        <div class="card-header">
-          <h3>Tareas Recomendadas</h3>
+      <div class="card mt-5 shadow-sm border-0">
+        <div class="card-header bg-primary text-white">
+          <h3 class="text-center">Tareas Recomendadas</h3>
         </div>
         <div class="card-body">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>Tarea</th>
-                <th>Proyecto</th>
-                <th>Similitud</th>
-                <th>Habilidades Coincidentes</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for rec in recommendations %}
+          <div class="table-responsive">
+            <table class="table table-hover table-striped align-middle">
+              <thead class="table-dark">
                 <tr>
-                  <td><a href="{% url 'task_detail' rec.task.id %}">{{ rec.task.title }}</a></td>
-                  <td>{{ rec.task.project.name }}</td>
-                  <td>{{ rec.similarity|floatformat:2 }}</td>
-                  <td>{{ rec.matching_skills|join:", " }}</td>
+                  <th>Tarea</th>
+                  <th>Proyecto</th>
+                  <th>Similitud</th>
+                  <th>Habilidades Coincidentes</th>
                 </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {% for rec in recommendations %}
+                  <tr>
+                    <td><a href="{% url 'task_detail' rec.task.id %}" class="text-decoration-none">{{ rec.task.title }}</a></td>
+                    <td>{{ rec.task.project.name }}</td>
+                    <td>{{ rec.similarity|floatformat:2 }}</td>
+                    <td>{{ rec.matching_skills|join:", " }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     {% endif %}

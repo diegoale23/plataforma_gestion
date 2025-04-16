@@ -1,17 +1,44 @@
 {% extends 'base.html' %}
 {% block content %}
   <div class="container mt-5">
-    <div class="card">
-      <div class="card-header">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-danger text-white text-center">
         <h2>Eliminar Proyecto</h2>
       </div>
       <div class="card-body">
-        <p>¿Estás seguro de que quieres eliminar el proyecto "<strong>{{ project.name }}</strong>"? Todas sus tareas asociadas también serán eliminadas.</p>
-        <form method="post">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-danger">Eliminar</button>
-          <a href="{% url 'project_list' %}" class="btn btn-secondary">Cancelar</a>
-        </form>
+        <p class="text-center">
+          ¿Estás seguro de que quieres eliminar el proyecto "<strong>{{ project.name }}</strong>"? 
+          Todas sus tareas asociadas también serán eliminadas.
+        </p>
+        <!-- Botón para abrir el modal -->
+        <div class="d-flex justify-content-center">
+          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+            Eliminar
+          </button>
+          <a href="{% url 'project_list' %}" class="btn btn-secondary ms-3">Cancelar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Confirmación -->
+  <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          ¿Estás seguro de que deseas eliminar el proyecto "<strong>{{ project.name }}</strong>"? Esta acción no se puede deshacer.
+        </div>
+        <div class="modal-footer">
+          <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+          </form>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
       </div>
     </div>
   </div>

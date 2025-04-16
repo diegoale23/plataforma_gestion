@@ -1,17 +1,21 @@
 {% extends 'base.html' %}
 {% block content %}
   <div class="container mt-5">
-    <div class="card">
-      <div class="card-header">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-danger text-white text-center">
         <h2>Eliminar Tarea</h2>
       </div>
       <div class="card-body">
-        <p>¿Estás seguro de que quieres eliminar la tarea "<strong>{{ task.title }}</strong>"?</p>
-        <form method="post">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-danger">Eliminar</button>
+        <p class="text-center">
+          ¿Estás seguro de que quieres eliminar la tarea "<strong>{{ task.title }}</strong>"?
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+          <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+          </form>
           <a href="{% url 'task_list' %}" class="btn btn-secondary">Cancelar</a>
-        </form>
+        </div>
       </div>
     </div>
   </div>

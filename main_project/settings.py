@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'projects.apps.ProjectsConfig',
     'market_analysis.apps.MarketAnalysisConfig',
     'ai_engine.apps.AiEngineConfig',
+    "widget_tweaks",
 ]
 
 MIDDLEWARE = [

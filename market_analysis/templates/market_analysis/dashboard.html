@@ -3,34 +3,34 @@
 
 {% block content %}
   <div class="container mt-5">
-    <div class="card">
-      <div class="card-header">
-        <h2>Análisis del Mercado Laboral</h2>
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-primary text-white">
+        <h2 class="text-center">Análisis del Mercado Laboral</h2>
       </div>
       <div class="card-body">
         <!-- Resumen de Ofertas -->
         <div class="row mb-4">
           <div class="col-md-4">
-            <div class="card text-center">
+            <div class="card text-center shadow-sm border-0">
               <div class="card-body">
-                <h5 class="card-title">Total de Ofertas</h5>
-                <p class="card-text">{{ total_offers }}</p>
+                <h5 class="card-title text-primary">Total de Ofertas</h5>
+                <p class="card-text fs-4">{{ total_offers }}</p>
               </div>
             </div>
           </div>
           <div class="col-md-4">
-            <div class="card text-center">
+            <div class="card text-center shadow-sm border-0">
               <div class="card-body">
-                <h5 class="card-title">Ofertas Activas</h5>
-                <p class="card-text">{{ active_offers }}</p>
+                <h5 class="card-title text-success">Ofertas Activas</h5>
+                <p class="card-text fs-4">{{ active_offers }}</p>
               </div>
             </div>
           </div>
           <div class="col-md-4">
-            <div class="card text-center">
+            <div class="card text-center shadow-sm border-0">
               <div class="card-body">
-                <h5 class="card-title">Última Actualización</h5>
-                <p class="card-text">{{ last_scraped|date:"d/m/Y"|default:"Nunca" }}</p>
+                <h5 class="card-title text-warning">Última Actualización</h5>
+                <p class="card-text fs-5">{{ last_scraped|date:"d/m/Y"|default:"Nunca" }}</p>
               </div>
             </div>
           </div>
@@ -38,26 +38,26 @@
 
         <!-- Gráfico de Habilidades Demandadas -->
         <div class="mb-4">
-          <h3>Habilidades Más Demandadas</h3>
+          <h3 class="text-center">Habilidades Más Demandadas</h3>
           <canvas id="skillsChart" height="100"></canvas>
         </div>
 
         <!-- Habilidades por Región -->
         <div class="mb-4">
-          <h3>Habilidades por Región</h3>
+          <h3 class="text-center">Habilidades por Región</h3>
           <canvas id="regionSkillsChart" height="100"></canvas>
         </div>
 
         <!-- Habilidades por Fuente -->
         <div class="mb-4">
-          <h3>Comparación por Fuente</h3>
+          <h3 class="text-center">Comparación por Fuente</h3>
           <canvas id="sourceSkillsChart" height="100"></canvas>
         </div>
 
         <!-- Inscritos por Habilidad -->
         {% if applicants_by_skill %}
           <div class="mb-4">
-            <h3>Inscritos por Habilidad</h3>
+            <h3 class="text-center">Inscritos por Habilidad</h3>
             <canvas id="applicantsChart" height="100"></canvas>
           </div>
         {% endif %}
@@ -65,36 +65,40 @@
         <!-- Tendencias de Habilidades -->
         {% if skill_trends %}
           <div class="mb-4">
-            <h3>Tendencias de Habilidades (Próximo Mes)</h3>
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>Habilidad</th>
-                  <th>Ocurrencias Totales</th>
-                  <th>Puntuación Predicha</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for skill, data in skill_trends.items %}
+            <h3 class="text-center">Tendencias de Habilidades (Próximo Mes)</h3>
+            <div class="table-responsive">
+              <table class="table table-hover table-striped align-middle">
+                <thead class="table-dark">
                   <tr>
-                    <td>{{ skill }}</td>
-                    <td>{{ data.total_occurrences|default:"N/A" }}</td>
-                    <td>{{ data.predicted_score|floatformat:2 }}</td>
+                    <th>Habilidad</th>
+                    <th>Ocurrencias Totales</th>
+                    <th>Puntuación Predicha</th>
                   </tr>
-                {% endfor %}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {% for skill, data in skill_trends.items %}
+                    <tr>
+                      <td>{{ skill }}</td>
+                      <td>{{ data.total_occurrences|default:"N/A" }}</td>
+                      <td>{{ data.predicted_score|floatformat:2 }}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
           </div>
         {% endif %}
 
         <!-- Botones -->
-        <a href="?refresh=true" class="btn btn-primary mb-3">Actualizar Datos</a>
-        <a href="{% url 'export_skills_report' %}" class="btn btn-secondary mb-3">Exportar Reporte</a>
-        <a href="{% url 'job_offer_list' %}" class="btn btn-primary">Ver Todas las Ofertas</a>
+        <div class="d-flex justify-content-center gap-3">
+          <a href="?refresh=true" class="btn btn-primary btn-lg">Actualizar Datos</a>
+          <a href="{% url 'export_skills_report' %}" class="btn btn-secondary btn-lg">Exportar Reporte</a>
+          <a href="{% url 'job_offer_list' %}" class="btn btn-success btn-lg">Ver Todas las Ofertas</a>
+        </div>
       </div>
     </div>
   </div>
-
+  
   <!-- Scripts para gráficos -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>

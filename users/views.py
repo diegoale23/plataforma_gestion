@@ -83,7 +83,17 @@ def create_user_view(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            user = form.save()
+            # Guardar el usuario
+            user = form.save(commit=False)
+            user.save()
+
+            # Guardar el perfil del usuario
+            profile, created = UserProfile.objects.get_or_create(user=user)
+            profile.skills.set(form.cleaned_data['skills'])  # Asignar habilidades
+            profile.bio = form.cleaned_data['bio']
+            profile.location = form.cleaned_data['location']
+            profile.save()
+
             return redirect('manage_users')
     else:
         form = SignUpForm()

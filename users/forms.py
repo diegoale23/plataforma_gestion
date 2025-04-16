@@ -1,4 +1,3 @@
-# users/forms.py
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -13,7 +12,7 @@ class SignUpForm(UserCreationForm):
         label="Habilidades"
     )
     bio = forms.CharField(
-        widget=forms.Textarea,
+        widget=forms.Textarea(attrs={'rows': 3}),
         required=False,
         label="Biografía"
     )
@@ -21,7 +20,7 @@ class SignUpForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = ('username', 'email', 'password1', 'password2')
+        fields = ('username', 'email', 'password1', 'password2', 'skills', 'bio', 'location')
 
     def save(self, commit=True):
         user = super().save(commit=False)
