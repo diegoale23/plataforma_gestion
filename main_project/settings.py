@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'projects.apps.ProjectsConfig',
     'market_analysis.apps.MarketAnalysisConfig',
     'ai_engine.apps.AiEngineConfig',
+    'desktop_app',
     "widget_tweaks",
 ]
 
@@ -97,11 +98,11 @@ LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = 'home'
 LOGIN_REDIRECT_URL = 'dashboard'
 
-
-
+# Configuración de LinkedIn (si es necesario)
 LINKEDIN_USERNAME = config('LINKEDIN_USERNAME', default='')
 LINKEDIN_PASSWORD = config('LINKEDIN_PASSWORD', default='')
 
+# Configuración de logs para depuración
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -118,6 +119,11 @@ LOGGING = {
         },
     },
     'loggers': {
+        'django.db.backends': {  # Habilitar el registro de consultas SQL
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
         'market_analysis': {
             'handlers': ['file', 'console'],
             'level': 'DEBUG',
@@ -125,3 +131,8 @@ LOGGING = {
         },
     },
 }
+
+# Configuración adicional para depuración de consultas SQL
+if DEBUG:
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
