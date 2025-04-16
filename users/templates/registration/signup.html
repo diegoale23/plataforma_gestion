@@ -9,6 +9,18 @@
             <h2>Registro</h2>
           </div>
           <div class="card-body">
+            <!-- Mostrar errores generales del formulario -->
+            {% if form.errors %}
+              <div class="alert alert-danger">
+                <ul>
+                  {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                      <li>{{ error }}</li>
+                    {% endfor %}
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
             <form method="post" class="needs-validation" novalidate>
               {% csrf_token %}
               <div class="mb-3">

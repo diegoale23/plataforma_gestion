@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load widget_tweaks %}
 {% block content %}
   <div class="container mt-5">
     <div class="card shadow-sm border-0">
@@ -8,7 +9,47 @@
       <div class="card-body">
         <form method="post" class="needs-validation" novalidate>
           {% csrf_token %}
-          {{ form.as_p }}
+          <div class="mb-3">
+            <label for="id_project" class="form-label">Proyecto</label>
+            {{ form.project|add_class:"form-control" }}
+          </div>
+          <div class="mb-3">
+            <label for="id_title" class="form-label">Título de la Tarea</label>
+            {{ form.title|add_class:"form-control" }}
+          </div>
+          <div class="mb-3">
+            <label for="id_description" class="form-label">Descripción</label>
+            {{ form.description|add_class:"form-control" }}
+          </div>
+          <div class="mb-3">
+            <label for="id_status" class="form-label">Estado</label>
+            {{ form.status|add_class:"form-control" }}
+          </div>
+          <div class="mb-3">
+            <label for="id_priority" class="form-label">Prioridad</label>
+            {{ form.priority|add_class:"form-control" }}
+          </div>
+          <div class="mb-3">
+            <label for="id_assigned_to" class="form-label">Asignado a</label>
+            {{ form.assigned_to|add_class:"form-control" }}
+          </div>
+          <div class="mb-3">
+            <label for="id_required_skills" class="form-label">Habilidades Requeridas</label>
+            <div class="row row-cols-2 row-cols-md-3 g-2">
+              {% for skill in form.fields.required_skills.queryset %}
+                <div class="col">
+                  <div class="form-check">
+                    <input type="checkbox" name="required_skills" value="{{ skill.id }}" id="skill_{{ skill.id }}" class="form-check-input">
+                    <label class="form-check-label" for="skill_{{ skill.id }}">{{ skill.name }}</label>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="id_deadline" class="form-label">Fecha Límite</label>
+            {{ form.deadline|add_class:"form-control" }}
+          </div>
           <button type="submit" class="btn btn-success w-100">Guardar</button>
           <a href="{% url 'task_list' %}" class="btn btn-secondary w-100 mt-3">Cancelar</a>
         </form>

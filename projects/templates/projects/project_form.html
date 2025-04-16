@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
   <div class="container mt-5">
-    <div class="card shadow-sm border-0">
-      <div class="card-header bg-primary text-white text-center">
+    <div class="card">
+      <div class="card-header">
         <h2>{% if form.instance.pk %}Editar Proyecto{% else %}Crear Proyecto{% endif %}</h2>
       </div>
       <div class="card-body">
-        <form method="post" class="needs-validation" novalidate>
+        <form method="post">
           {% csrf_token %}
           {{ form.as_p }}
           <button type="submit" class="btn btn-success w-100">Guardar</button>
-          <a href="{% url 'project_list' %}" class="btn btn-secondary w-100 mt-3">Cancelar</a>
+          <a href="{% url 'project_list' %}" class="btn btn-secondary w-100 mt-2">Cancelar</a>
         </form>
       </div>
     </div>
