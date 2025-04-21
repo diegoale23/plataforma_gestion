@@ -1,15 +1,18 @@
-# main_project/settings.py
 import os
 from pathlib import Path
 from decouple import config
 
+# Directorio base del proyecto
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Clave secreta y modo debug
 SECRET_KEY = config('SECRET_KEY')
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG', default=True, cast=bool)  # Cambiado a True por defecto para desarrollo
 
-ALLOWED_HOSTS = []
+# Hosts permitidos
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']  # Añadidos hosts comunes para desarrollo
 
+# Aplicaciones instaladas
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -22,9 +25,10 @@ INSTALLED_APPS = [
     'market_analysis.apps.MarketAnalysisConfig',
     'ai_engine.apps.AiEngineConfig',
     'desktop_app',
-    "widget_tweaks",
+    'widget_tweaks',
 ]
 
+# Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -35,14 +39,17 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# Configuración de URLs
 ROOT_URLCONF = 'main_project.urls'
 
+# Configuración de templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             BASE_DIR / 'templates',
             BASE_DIR / 'users' / 'templates',
+            BASE_DIR / 'market_analysis' / 'templates',  # Añadido para templates de market_analysis
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -56,8 +63,10 @@ TEMPLATES = [
     },
 ]
 
+# Aplicación WSGI
 WSGI_APPLICATION = 'main_project.wsgi.application'
 
+# Configuración de la base de datos
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -69,6 +78,7 @@ DATABASES = {
     }
 }
 
+# Validadores de contraseñas
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -84,55 +94,86 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Configuración de internacionalización
 LANGUAGE_CODE = 'es-es'
 TIME_ZONE = 'Europe/Madrid'
 USE_I18N = True
 USE_TZ = True
 
+# Configuración de archivos estáticos
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # Para producción con collectstatic
 
+# Campo automático por defecto
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# URLs de autenticación
 LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = 'home'
 LOGIN_REDIRECT_URL = 'dashboard'
 
-# Configuración de LinkedIn (si es necesario)
+# Credenciales de LinkedIn
 LINKEDIN_USERNAME = config('LINKEDIN_USERNAME', default='')
 LINKEDIN_PASSWORD = config('LINKEDIN_PASSWORD', default='')
 
-# Configuración de logs para depuración
+# Configuración de logging
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
     'handlers': {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': BASE_DIR / 'logs' / 'scraper.log',
-            'encoding': 'utf-8',  # Forzar codificación UTF-8
+            'encoding': 'utf-8',
+            'formatter': 'verbose',
         },
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
         },
     },
     'loggers': {
-        'django.db.backends': {  # Habilitar el registro de consultas SQL
+        'django': {
             'handlers': ['console'],
-            'level': 'DEBUG',
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
             'propagate': False,
         },
         'market_analysis': {
             'handlers': ['file', 'console'],
             'level': 'DEBUG',
-            'propagate': True,
+            'propagate': False,
         },
     },
 }
 
-# Configuración adicional para depuración de consultas SQL
+# Configuración adicional para depuración en desarrollo
 if DEBUG:
-    import logging
-    logging.basicConfig(level=logging.DEBUG)
+    # Mostrar consultas SQL en la consola
+    LOGGING['loggers']['django.db.backends']['level'] = 'DEBUG'
+    # Configuración de correo para depuración
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Configuración de almacenamiento de medios (si se usa)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# Configuración de CSRF para AJAX
+CSRF_COOKIE_SECURE = False  # Cambiar a True en producción con HTTPS
+CSRF_COOKIE_HTTPONLY = False
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://127.0.0.1:8000']

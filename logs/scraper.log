@@ -259,3 +259,257 @@ Nueva oferta guardada: DESARROLLADOR/A .NET
 Nueva oferta guardada: Desarrollador Salesforce Marketing Cloud (inglés alto) - 100% teletrabajo, toda España
 Nueva oferta guardada: Desarrollador/a Fullstack Angular JAVA
 Scraping de InfoJobs completado: 21 ofertas procesadas.
+Error crítico en run_scraping: Expecting value: line 1 column 1 (char 0)
+Iniciando run_scraping
+Contenido de request.body: b'keywords=%5B%22python%22%2C%22java%22%5D&location=Espa%C3%B1a&max_offers=10&csrfmiddlewaretoken=N7xFUUo7sBCWyhetC5jjIiyK8p0eCRXIEDMc4UtQqCgMr1WBjD2YgWXKK8XBt5gW'
+Error al parsear JSON: Expecting value: line 1 column 1 (char 0)
+INFO 2025-04-21 14:17:04,242 views Iniciando run_scraping
+DEBUG 2025-04-21 14:17:04,243 views Contenido de request.body: b'{"keywords":["python, java"],"location":"Espa\xc3\xb1a","max_offers":10}'
+INFO 2025-04-21 14:17:04,243 views Parámetros recibidos: keywords=['python, java'], location=España, max_offers=10
+INFO 2025-04-21 14:17:21,332 views Tecnoempleo: 10 ofertas obtenidas para 'python, java'
+WARNING 2025-04-21 14:17:21,333 infojobs_scraper TWOCAPTCHA_API_KEY no está configurada en .env. El CAPTCHA deberá resolverse manualmente.
+DEBUG 2025-04-21 14:17:21,333 infojobs_scraper 2Captcha inicializado correctamente.
+INFO 2025-04-21 14:17:21,333 infojobs_scraper Iniciando scraping de InfoJobs: query='python, java', location='España', max_offers=10
+INFO 2025-04-21 14:17:27,623 infojobs_scraper Obteniendo ofertas para query='python, java', location='España'
+INFO 2025-04-21 14:17:33,440 infojobs_scraper Detectado CAPTCHA de GeeTest (intento 1/3).
+INFO 2025-04-21 14:17:33,441 infojobs_scraper Intentando resolver con 2Captcha.
+DEBUG 2025-04-21 14:17:33,461 infojobs_scraper Script de GeeTest encontrado: 
+                          initGeetest({
+                            gt: "ce33de396f8d04030f6eca8fbd225070",
+                            challenge: "f387cb21c74a18188fec6f6543a27e8c",
+                ...
+DEBUG 2025-04-21 14:17:33,462 infojobs_scraper gt: ce33de396f8d04030f6eca8fbd225070
+DEBUG 2025-04-21 14:17:33,462 infojobs_scraper challenge: f387cb21c74a18188fec6f6543a27e8c
+ERROR 2025-04-21 14:17:33,987 infojobs_scraper Error al resolver CAPTCHA con 2Captcha: ERROR_WRONG_USER_KEY. Verifica que TWOCAPTCHA_API_KEY esté definida y correcta en .env (puedes obtener una en https://2captcha.com/).
+WARNING 2025-04-21 14:17:33,995 infojobs_scraper Pasando a resolución manual.
+WARNING 2025-04-21 14:17:33,995 infojobs_scraper No se pudo resolver con 2Captcha o no configurado. Resuelve el CAPTCHA manualmente (intento 1).
+INFO 2025-04-21 14:18:34,129 infojobs_scraper CAPTCHA resuelto manualmente.
+DEBUG 2025-04-21 14:18:44,706 infojobs_scraper No se encontró banner de cookies.
+DEBUG 2025-04-21 14:18:44,722 infojobs_scraper Ofertas detectadas en la página.
+DEBUG 2025-04-21 14:18:53,266 infojobs_scraper No se encontró botón 'Mostrar más'.
+DEBUG 2025-04-21 14:18:53,571 infojobs_scraper Se encontraron 57 elementos li.ij-List-item
+DEBUG 2025-04-21 14:18:53,828 infojobs_scraper Descripción: Si tienes amplia experiencia en el diseño, la supervisión de la implementación de la solución en entornos de arquitectura Cloud y te motiva asumir un nuevo reto profesional en una compañía líder en se...
+DEBUG 2025-04-21 14:18:53,851 infojobs_scraper Ubicación extraída (HTML): Madrid
+DEBUG 2025-04-21 14:18:53,876 infojobs_scraper Empresa extraída (HTML): Consultia IT
+DEBUG 2025-04-21 14:18:53,902 infojobs_scraper Salario extraído (HTML): Más de 50.000 €
+DEBUG 2025-04-21 14:18:53,928 infojobs_scraper Fecha extraída: 2025-04-15 (texto: Hace 6d)
+DEBUG 2025-04-21 14:18:53,946 infojobs_scraper No se encontró número de inscritos
+DEBUG 2025-04-21 14:18:53,967 infojobs_scraper Habilidades (etiquetas): []
+DEBUG 2025-04-21 14:18:53,968 infojobs_scraper Habilidades totales: []
+DEBUG 2025-04-21 14:18:53,982 infojobs_scraper Encontrada oferta: Cloud Technical Lead, URL: https://www.infojobs.net/madrid/cloud-technical-lead/of-i908b2caf8246b6bb149b496903b97e?applicationOrigin=search-new&page=1&sortBy=RELEVANCE, Empresa: Consultia IT, Ubicación: Madrid, Salario: Más de 50.000 €, Habilidades: [], Fecha: 2025-04-15, Inscritos: None
+DEBUG 2025-04-21 14:18:54,017 infojobs_scraper No se encontró título. HTML de oferta: <li class="ij-List-item"><div aria-label="Publicidad" class="ij-OfferList-banner ij-OfferList-banner--firstPromoted"><div id="ad-inline_1-wrapper" class="adit-saitama-SaitamaAd" role="complementary"><div id="ad-inline_1" data-google-query-id="COn34tWN6YwDFUZb9ggdN0scTw"><div id="google_ads_iframe_/124564242/Infojobs/Infojobs-web_desktop/ij-wde-offer-list-inline_1_0__container__" style="border: 0pt none; display: inline-block; width: 100%; height: auto;"><iframe frameborder="0" src="https://3afc3
+DEBUG 2025-04-21 14:18:54,085 infojobs_scraper Descripción: En esta búsqueda de nuevos profesionales, queremos cubrir una vacante de Desarrollador Java, con experiencia en Python, para trabajar al servicio de uno de nuestros clientes con alcance internacional....
+DEBUG 2025-04-21 14:18:54,107 infojobs_scraper Ubicación extraída (HTML): Pamplona/Iruña
+DEBUG 2025-04-21 14:18:54,129 infojobs_scraper Empresa extraída (HTML): TIGLOO
+DEBUG 2025-04-21 14:18:54,146 infojobs_scraper Salario extraído (HTML): Más de 30.000 €
+DEBUG 2025-04-21 14:18:54,165 infojobs_scraper Fecha extraída: 2025-04-17 (texto: Hace 4d)
+DEBUG 2025-04-21 14:18:54,177 infojobs_scraper No se encontró número de inscritos
+DEBUG 2025-04-21 14:18:54,190 infojobs_scraper Habilidades (etiquetas): []
+DEBUG 2025-04-21 14:18:54,190 infojobs_scraper Habilidades totales: ['Java']
+DEBUG 2025-04-21 14:18:54,199 infojobs_scraper Encontrada oferta: Desarrollador/a Java y Python, URL: https://www.infojobs.net/pamplona-iruna/desarrollador-java-python/of-i23aa5e0dcc47daa10e58e088d87b18?applicationOrigin=search-new&page=1&sortBy=RELEVANCE, Empresa: TIGLOO, Ubicación: Pamplona/Iruña, Salario: Más de 30.000 €, Habilidades: ['Java'], Fecha: 2025-04-17, Inscritos: None
+DEBUG 2025-04-21 14:18:54,239 infojobs_scraper Descripción: ¿Te atrae un proyecto innovador? ¡Desde Luca TIC nos gustaría contar contigo! Estamos en búsqueda de una persona para el rol de Programador/a, con al menos 2 años de experiencia trabajando en empresa ...
+DEBUG 2025-04-21 14:18:54,253 infojobs_scraper Ubicación extraída (HTML): Madrid
+DEBUG 2025-04-21 14:18:54,273 infojobs_scraper Empresa extraída (HTML): Luca TIC
+DEBUG 2025-04-21 14:18:54,289 infojobs_scraper Salario extraído (HTML): Salario no disponible
+DEBUG 2025-04-21 14:18:54,307 infojobs_scraper Fecha extraída: 2025-04-16 (texto: Hace 5d)
+DEBUG 2025-04-21 14:18:54,316 infojobs_scraper No se encontró número de inscritos
+DEBUG 2025-04-21 14:18:54,325 infojobs_scraper Habilidades (etiquetas): []
+DEBUG 2025-04-21 14:18:54,325 infojobs_scraper Habilidades totales: ['Java']
+DEBUG 2025-04-21 14:18:54,335 infojobs_scraper Encontrada oferta: Programador/a Java+Python+Unix, URL: https://www.infojobs.net/madrid/programador-java-python-unix/of-i5921e2fea749808487407208e9c8be?applicationOrigin=search-new&page=1&sortBy=RELEVANCE, Empresa: Luca TIC, Ubicación: Madrid, Salario: Salario no disponible, Habilidades: ['Java'], Fecha: 2025-04-16, Inscritos: None
+DEBUG 2025-04-21 14:18:54,351 infojobs_scraper No se encontró título. HTML de oferta: <li class="ij-List-item"><div class="ij-CampaignsLogosSimple"><ul class="sui-ThumbnailList"><li class="sui-ThumbnailList-item"><a href="https://viewnext.ofertas-trabajo.infojobs.net" target="_self"><figure class="sui-ThumbnailBasic"><div class="sui-ImagePlaceholder sui-ThumbnailBasic-image sui-ImagePlaceholder--rounded"><picture><source media="(max-width: 480px)" srcset="https://multimedia.infojobs.net/api/v1/tenants/c7e2b9c1-8480-43b0-ad9e-000c17aa2cbb/domains/718302b6-5343-43d3-a8a3-829dc3da08
+DEBUG 2025-04-21 14:18:54,444 infojobs_scraper Descripción: Desde Grupo Hasten seleccionamos un/a Desarrollador Java con al menos 5 años de experiencia en Python, Unix, ShellScript y nivel de inglés alto para importante proyecto en modalidad híbrida en Las Tab...
+DEBUG 2025-04-21 14:18:54,494 infojobs_scraper Ubicación extraída (HTML): Madrid
+DEBUG 2025-04-21 14:18:54,524 infojobs_scraper Empresa extraída (HTML): Grupo Hasten
+DEBUG 2025-04-21 14:18:54,539 infojobs_scraper Salario extraído (HTML): Salario no disponible
+DEBUG 2025-04-21 14:18:54,554 infojobs_scraper Fecha extraída: 2025-04-04 (texto: 04 abr)
+DEBUG 2025-04-21 14:18:54,564 infojobs_scraper No se encontró número de inscritos
+DEBUG 2025-04-21 14:18:54,571 infojobs_scraper Habilidades (etiquetas): []
+DEBUG 2025-04-21 14:18:54,571 infojobs_scraper Habilidades totales: ['Java']
+DEBUG 2025-04-21 14:18:54,601 infojobs_scraper Encontrada oferta: Desarrollador/a Java / Python /ShellScript / Inglés, URL: https://www.infojobs.net/madrid/desarrollador-java-python-shellscript-ingles/of-idd3252f383496e8d8f5f47d86ecec7?applicationOrigin=search-new&page=1&sortBy=RELEVANCE, Empresa: Grupo Hasten, Ubicación: Madrid, Salario: Salario no disponible, Habilidades: ['Java'], Fecha: 2025-04-04, Inscritos: None
+DEBUG 2025-04-21 14:18:54,643 infojobs_scraper Descripción: More digital. More human. More Minsait. Somos una empresa líder global de tecnología y consultoría digital que conecta personas, tecnología y negocios para generar crecimiento, transformación e impact...
+DEBUG 2025-04-21 14:18:54,660 infojobs_scraper Ubicación extraída (HTML): Madrid
+DEBUG 2025-04-21 14:18:54,677 infojobs_scraper Empresa extraída (HTML): MINSAIT (Indra Producción de Software)
+DEBUG 2025-04-21 14:18:54,693 infojobs_scraper Salario extraído (HTML): Salario no disponible
+DEBUG 2025-04-21 14:18:54,710 infojobs_scraper Fecha extraída: 2025-03-18 (texto: 18 mar)
+DEBUG 2025-04-21 14:18:54,718 infojobs_scraper No se encontró número de inscritos
+DEBUG 2025-04-21 14:18:54,728 infojobs_scraper Habilidades (etiquetas): []
+DEBUG 2025-04-21 14:18:54,728 infojobs_scraper Habilidades totales: ['Java', 'SpringBoot']
+DEBUG 2025-04-21 14:18:54,735 infojobs_scraper Encontrada oferta: Programador Java/Python - Prácticas Grado/Máster en Ingeniería de Datos, Informática, Matemáticas Madrid, URL: https://www.infojobs.net/madrid/programador-java-python-practicas-grado-master-ingenieria-datos-informatica-matematicas-madrid/of-i3e20a6287d47eda28ed3c031f06270?applicationOrigin=search-new&page=1&sortBy=RELEVANCE, Empresa: MINSAIT (Indra Producción de Software), Ubicación: Madrid, Salario: Salario no disponible, Habilidades: ['Java', 'SpringBoot'], Fecha: 2025-03-18, Inscritos: None
+DEBUG 2025-04-21 14:18:54,782 infojobs_scraper Descripción: Funciones Des de Fundesplai, estem cercant a un/a desenvolupador/a Back End amb experiència en Java, Python y PostgreSQL. Som un equip de 5 analistes / desenvolupadors/es i volem incorporar al nostre ...
+DEBUG 2025-04-21 14:18:54,800 infojobs_scraper Ubicación extraída (HTML): El Prat de Llobregat
+DEBUG 2025-04-21 14:18:54,819 infojobs_scraper Empresa extraída (HTML): Fundació Catalana de l`Esplai
+DEBUG 2025-04-21 14:18:54,836 infojobs_scraper Salario extraído (HTML): 27.000 € - 30.000 € Bruto/año
+DEBUG 2025-04-21 14:18:54,855 infojobs_scraper Fecha extraída: 2025-03-28 (texto: 28 mar)
+DEBUG 2025-04-21 14:18:54,870 infojobs_scraper No se encontró número de inscritos
+DEBUG 2025-04-21 14:18:54,884 infojobs_scraper Habilidades (etiquetas): []
+DEBUG 2025-04-21 14:18:54,885 infojobs_scraper Habilidades totales: ['Java']
+DEBUG 2025-04-21 14:18:54,897 infojobs_scraper Encontrada oferta: Desenvolupador/a Backend Java / Python / PostgreSQL, URL: https://www.infojobs.net/el-prat-de-llobregat/desenvolupador-backend-java-python-postgresql/of-i5b197219394f939648a61d65016dfd?applicationOrigin=search-new&page=1&sortBy=RELEVANCE, Empresa: Fundació Catalana de l`Esplai, Ubicación: El Prat de Llobregat, Salario: 27.000 € - 30.000 € Bruto/año, Habilidades: ['Java'], Fecha: 2025-03-28, Inscritos: None
+DEBUG 2025-04-21 14:18:54,952 infojobs_scraper Descripción: ABOUT THE ROLE: RavenPack is seeking an experienced Senior Back-End Engineer, with proven experience working in fast moving, high-performance development squads, to participate in the technical design...
+DEBUG 2025-04-21 14:18:54,969 infojobs_scraper Ubicación extraída (HTML): Madrid
+DEBUG 2025-04-21 14:18:54,986 infojobs_scraper Empresa extraída (HTML): RavenPack International
+DEBUG 2025-04-21 14:18:55,004 infojobs_scraper Salario extraído (HTML): Salario no disponible
+DEBUG 2025-04-21 14:18:55,021 infojobs_scraper Fecha extraída: 2025-04-19 (texto: Hace 2d)
+DEBUG 2025-04-21 14:18:55,032 infojobs_scraper No se encontró número de inscritos
+DEBUG 2025-04-21 14:18:55,043 infojobs_scraper Habilidades (etiquetas): []
+DEBUG 2025-04-21 14:18:55,044 infojobs_scraper Habilidades totales: ['Java']
+DEBUG 2025-04-21 14:18:55,051 infojobs_scraper Encontrada oferta: Senior Python Backend Engineer / Ingeniero Senior Back End Python, URL: https://www.infojobs.net/madrid/senior-python-backend-engineer-ingeniero-senior-back-end-python/of-i04d3b793734cdfa70236f50fb1fd5d?applicationOrigin=search-new&page=1&sortBy=RELEVANCE, Empresa: RavenPack International, Ubicación: Madrid, Salario: Salario no disponible, Habilidades: ['Java'], Fecha: 2025-04-19, Inscritos: None
+DEBUG 2025-04-21 14:18:55,071 infojobs_scraper No se encontró título. HTML de oferta: <li class="ij-List-item"><div aria-label="Publicidad" class="ij-OfferList-banner"><div id="ad-inline_2-wrapper" class="adit-saitama-SaitamaAd" role="complementary"><div id="ad-inline_2" data-google-query-id="COP-5dWN6YwDFUZb9ggdN0scTw"><div id="google_ads_iframe_/124564242/Infojobs/Infojobs-web_desktop/ij-wde-offer-list-inline_2_0__container__" style="border: 0pt none;"><iframe id="google_ads_iframe_/124564242/Infojobs/Infojobs-web_desktop/ij-wde-offer-list-inline_2_0" name="google_ads_iframe_/1
+INFO 2025-04-21 14:18:57,586 infojobs_scraper Navegador cerrado correctamente.
+INFO 2025-04-21 14:18:57,593 infojobs_scraper Nueva oferta guardada: Cloud Technical Lead
+INFO 2025-04-21 14:18:57,598 infojobs_scraper Nueva oferta guardada: Desarrollador/a Java y Python
+INFO 2025-04-21 14:18:57,606 infojobs_scraper Nueva oferta guardada: Programador/a Java+Python+Unix
+DEBUG 2025-04-21 14:18:57,615 infojobs_scraper Oferta ya existente: Desarrollador/a Java / Python /ShellScript / Inglés
+INFO 2025-04-21 14:18:57,621 infojobs_scraper Nueva oferta guardada: Programador Java/Python - Prácticas Grado/Máster en Ingeniería de Datos, Informática, Matemáticas Madrid
+INFO 2025-04-21 14:18:57,639 infojobs_scraper Nueva oferta guardada: Desenvolupador/a Backend Java / Python / PostgreSQL
+INFO 2025-04-21 14:18:57,653 infojobs_scraper Nueva oferta guardada: Senior Python Backend Engineer / Ingeniero Senior Back End Python
+INFO 2025-04-21 14:18:57,657 infojobs_scraper Scraping de InfoJobs completado: 7 ofertas procesadas.
+INFO 2025-04-21 14:18:57,657 views InfoJobs: 7 ofertas obtenidas para 'python, java'
+WARNING 2025-04-21 14:18:57,658 linkedin_scraper 
+**********************************************************************
+WARNING 2025-04-21 14:18:57,658 linkedin_scraper ADVERTENCIA: Scraping de LinkedIn en curso.
+WARNING 2025-04-21 14:18:57,658 linkedin_scraper Esto puede violar los Términos de Servicio de LinkedIn y resultar en bloqueos.
+WARNING 2025-04-21 14:18:57,659 linkedin_scraper Usa este código bajo tu propio riesgo y con moderación.
+WARNING 2025-04-21 14:18:57,659 linkedin_scraper Ejecutando en modo headless (sin navegador visible).
+WARNING 2025-04-21 14:18:57,660 linkedin_scraper **********************************************************************
+
+INFO 2025-04-21 14:19:07,115 linkedin_scraper Iniciando scraping de LinkedIn: query='python, java', location='España', max_offers=10
+INFO 2025-04-21 14:19:07,115 linkedin_scraper Iniciando sesión en LinkedIn...
+INFO 2025-04-21 14:19:20,191 linkedin_scraper Inicio de sesión exitoso.
+INFO 2025-04-21 14:19:20,191 linkedin_scraper Buscando ofertas en LinkedIn: query='python, java', location='España', max_offers=10
+DEBUG 2025-04-21 14:19:28,852 linkedin_scraper Página básica cargada.
+DEBUG 2025-04-21 14:19:28,864 linkedin_scraper Ofertas de búsqueda cargadas correctamente.
+DEBUG 2025-04-21 14:19:29,037 linkedin_scraper URL encontrada: https://www.linkedin.com/jobs/view/4210710435/
+DEBUG 2025-04-21 14:19:29,037 linkedin_scraper URL encontrada: https://www.linkedin.com/jobs/view/3803190952/
+DEBUG 2025-04-21 14:19:29,037 linkedin_scraper URL encontrada: https://www.linkedin.com/jobs/view/4210712059/
+DEBUG 2025-04-21 14:19:29,038 linkedin_scraper URL encontrada: https://www.linkedin.com/jobs/view/4210709135/
+DEBUG 2025-04-21 14:19:29,038 linkedin_scraper URL encontrada: https://www.linkedin.com/jobs/view/4210704869/
+DEBUG 2025-04-21 14:19:29,038 linkedin_scraper URL encontrada: https://www.linkedin.com/jobs/view/3940980049/
+DEBUG 2025-04-21 14:19:29,039 linkedin_scraper URL encontrada: https://www.linkedin.com/jobs/view/4121802301/
+DEBUG 2025-04-21 14:19:29,039 linkedin_scraper URL encontrada: https://www.linkedin.com/jobs/view/4210710435/
+DEBUG 2025-04-21 14:19:29,039 linkedin_scraper URL encontrada: https://www.linkedin.com/jobs/view/4210710435/
+DEBUG 2025-04-21 14:19:32,243 linkedin_scraper URL encontrada: https://www.linkedin.com/jobs/view/4210710435/
+INFO 2025-04-21 14:19:35,252 linkedin_scraper Total URLs recolectadas: 10
+INFO 2025-04-21 14:19:35,252 linkedin_scraper Parseando detalle: https://www.linkedin.com/jobs/view/4210710435/
+DEBUG 2025-04-21 14:19:47,921 linkedin_scraper HTML de detalle guardado en 'job_detail_4210710435.html'.
+DEBUG 2025-04-21 14:19:48,107 linkedin_scraper Título: Mozo de almacén
+DEBUG 2025-04-21 14:19:48,116 linkedin_scraper Empresa: GRUPO INSTALVALEX LOGISTIC SL
+DEBUG 2025-04-21 14:19:48,120 linkedin_scraper Ubicación: Foronda, País Vasco / Euskadi, España (Presencial)
+DEBUG 2025-04-21 14:19:48,122 linkedin_scraper Descripción: Acerca del empleoGanas de trabajar, trabajar en equipo, y que sepa llevar carretilla elevadora...
+DEBUG 2025-04-21 14:19:48,133 linkedin_scraper Habilidades: []
+DEBUG 2025-04-21 14:19:48,136 linkedin_scraper Texto de fecha crudo: 'hace 1 semana'
+DEBUG 2025-04-21 14:19:48,136 linkedin_scraper Fecha: 2025-04-14
+DEBUG 2025-04-21 14:19:48,156 linkedin_scraper Salario: No especificado
+INFO 2025-04-21 14:19:48,171 linkedin_scraper Guardado en JobOffer: Mozo de almacén (nueva)
+INFO 2025-04-21 14:19:48,175 linkedin_scraper Actualizado MarketTrend: 0 habilidades
+INFO 2025-04-21 14:19:53,176 linkedin_scraper Parseando detalle: https://www.linkedin.com/jobs/view/3803190952/
+DEBUG 2025-04-21 14:20:05,633 linkedin_scraper HTML de detalle guardado en 'job_detail_3803190952.html'.
+DEBUG 2025-04-21 14:20:05,822 linkedin_scraper Título: Prácticas de estudiante
+DEBUG 2025-04-21 14:20:05,831 linkedin_scraper Empresa: Caja Rural de Navarra
+DEBUG 2025-04-21 14:20:05,835 linkedin_scraper Ubicación: Vitoria-Gasteiz, País Vasco / Euskadi, España (Presencial)
+DEBUG 2025-04-21 14:20:05,837 linkedin_scraper Descripción: Acerca del empleoINTRODUCCIÓN AL SECTOR FINANCIEROSi estás estudiando o finalizando tus estudios en ...
+DEBUG 2025-04-21 14:20:05,853 linkedin_scraper Habilidades: ['rest']
+DEBUG 2025-04-21 14:20:05,856 linkedin_scraper Texto de fecha crudo: 'hace 1 semana'
+DEBUG 2025-04-21 14:20:05,856 linkedin_scraper Fecha: 2025-04-14
+DEBUG 2025-04-21 14:20:05,882 linkedin_scraper Salario: No especificado
+INFO 2025-04-21 14:20:05,897 linkedin_scraper Guardado en JobOffer: Prácticas de estudiante (nueva)
+INFO 2025-04-21 14:20:05,903 linkedin_scraper Actualizado MarketTrend: 1 habilidades
+INFO 2025-04-21 14:20:10,903 linkedin_scraper Parseando detalle: https://www.linkedin.com/jobs/view/4210712059/
+DEBUG 2025-04-21 14:20:23,241 linkedin_scraper HTML de detalle guardado en 'job_detail_4210712059.html'.
+DEBUG 2025-04-21 14:20:23,575 linkedin_scraper Título: Asesor (H/M) Comercial Televenta Formación. LATAM.
+DEBUG 2025-04-21 14:20:23,581 linkedin_scraper Empresa: Northius
+DEBUG 2025-04-21 14:20:23,585 linkedin_scraper Ubicación: España (En remoto)
+DEBUG 2025-04-21 14:20:23,588 linkedin_scraper Descripción: Acerca del empleo¿Te apasionan las ventas? ¿Quieres ayudar a las personas ofreciéndoles la formación...
+DEBUG 2025-04-21 14:20:23,596 linkedin_scraper Habilidades: []
+DEBUG 2025-04-21 14:20:23,599 linkedin_scraper Texto de fecha crudo: 'hace 4 semanas'
+DEBUG 2025-04-21 14:20:23,600 linkedin_scraper Fecha: 2025-03-24
+DEBUG 2025-04-21 14:20:23,627 linkedin_scraper Salario: No especificado
+INFO 2025-04-21 14:20:23,634 linkedin_scraper Guardado en JobOffer: Asesor (H/M) Comercial Televenta Formación. LATAM. (nueva)
+INFO 2025-04-21 14:20:23,639 linkedin_scraper Actualizado MarketTrend: 0 habilidades
+INFO 2025-04-21 14:20:28,639 linkedin_scraper Parseando detalle: https://www.linkedin.com/jobs/view/4210709135/
+DEBUG 2025-04-21 14:20:41,053 linkedin_scraper HTML de detalle guardado en 'job_detail_4210709135.html'.
+DEBUG 2025-04-21 14:20:41,229 linkedin_scraper Título: Prácticas de Marketing Digital
+DEBUG 2025-04-21 14:20:41,236 linkedin_scraper Empresa: Herkord LLC
+DEBUG 2025-04-21 14:20:41,240 linkedin_scraper Ubicación: España (En remoto)
+DEBUG 2025-04-21 14:20:41,242 linkedin_scraper Descripción: Acerca del empleoEnviar CV a hr@herkord.com con Asunto: Pasantia Marketing DigitalÚnete a HerkordEnH...
+DEBUG 2025-04-21 14:20:41,256 linkedin_scraper Habilidades: ['git']
+DEBUG 2025-04-21 14:20:41,260 linkedin_scraper Texto de fecha crudo: 'hace 4 días'
+DEBUG 2025-04-21 14:20:41,261 linkedin_scraper Fecha: 2025-04-17
+DEBUG 2025-04-21 14:20:41,287 linkedin_scraper Salario: No especificado
+INFO 2025-04-21 14:20:41,299 linkedin_scraper Guardado en JobOffer: Prácticas de Marketing Digital (nueva)
+INFO 2025-04-21 14:20:41,302 linkedin_scraper Actualizado MarketTrend: 1 habilidades
+INFO 2025-04-21 14:20:46,304 linkedin_scraper Parseando detalle: https://www.linkedin.com/jobs/view/4210704869/
+DEBUG 2025-04-21 14:20:58,728 linkedin_scraper HTML de detalle guardado en 'job_detail_4210704869.html'.
+DEBUG 2025-04-21 14:20:58,918 linkedin_scraper Título: Asesor/a energético
+DEBUG 2025-04-21 14:20:58,927 linkedin_scraper Empresa: Energy Tricolor | Asesoría Energética y Soluciones Sostenibles
+DEBUG 2025-04-21 14:20:58,932 linkedin_scraper Ubicación: España (En remoto)
+DEBUG 2025-04-21 14:20:58,934 linkedin_scraper Descripción: Acerca del empleo🚀 ¡Buscamos Asesor/a energético para Energy Tricolor! ⚡¿Quieres generar ingresos ex...
+DEBUG 2025-04-21 14:20:58,947 linkedin_scraper Habilidades: []
+DEBUG 2025-04-21 14:20:58,950 linkedin_scraper Texto de fecha crudo: 'hace 2 semanas'
+DEBUG 2025-04-21 14:20:58,951 linkedin_scraper Fecha: 2025-04-07
+DEBUG 2025-04-21 14:20:58,981 linkedin_scraper Salario: No especificado
+INFO 2025-04-21 14:20:58,987 linkedin_scraper Guardado en JobOffer: Asesor/a energético (nueva)
+INFO 2025-04-21 14:20:58,989 linkedin_scraper Actualizado MarketTrend: 0 habilidades
+INFO 2025-04-21 14:21:03,989 linkedin_scraper Parseando detalle: https://www.linkedin.com/jobs/view/3940980049/
+DEBUG 2025-04-21 14:21:16,370 linkedin_scraper HTML de detalle guardado en 'job_detail_3940980049.html'.
+DEBUG 2025-04-21 14:21:16,551 linkedin_scraper Título: Estudiantes y/o recién graduados/as
+DEBUG 2025-04-21 14:21:16,560 linkedin_scraper Empresa: Forvis Mazars in Spain
+DEBUG 2025-04-21 14:21:16,563 linkedin_scraper Ubicación: Vitoria-Gasteiz, País Vasco / Euskadi, España (Presencial)
+DEBUG 2025-04-21 14:21:16,566 linkedin_scraper Descripción: Acerca del empleoForvis Mazars es la nueva red formada por Forvis, una de las principales compañías ...
+DEBUG 2025-04-21 14:21:16,578 linkedin_scraper Habilidades: []
+DEBUG 2025-04-21 14:21:16,581 linkedin_scraper Texto de fecha crudo: 'hace 1 semana'
+DEBUG 2025-04-21 14:21:16,581 linkedin_scraper Fecha: 2025-04-14
+DEBUG 2025-04-21 14:21:16,609 linkedin_scraper Salario: No especificado
+INFO 2025-04-21 14:21:16,616 linkedin_scraper Guardado en JobOffer: Estudiantes y/o recién graduados/as (nueva)
+INFO 2025-04-21 14:21:16,618 linkedin_scraper Actualizado MarketTrend: 0 habilidades
+INFO 2025-04-21 14:21:21,619 linkedin_scraper Parseando detalle: https://www.linkedin.com/jobs/view/4121802301/
+DEBUG 2025-04-21 14:21:34,167 linkedin_scraper HTML de detalle guardado en 'job_detail_4121802301.html'.
+DEBUG 2025-04-21 14:21:34,398 linkedin_scraper Título: Programa de Prácticas Remuneradas 2025 - Red de Oficinas (Zaragoza, Huesca, La Rioja y Lleida)
+DEBUG 2025-04-21 14:21:34,409 linkedin_scraper Empresa: Caja Rural de Aragón
+DEBUG 2025-04-21 14:21:34,423 linkedin_scraper Ubicación: Madrid, Comunidad de Madrid, España (Híbrido)
+DEBUG 2025-04-21 14:21:34,429 linkedin_scraper Descripción: Acerca del empleoCaja Rural AragónCaja Rural de Aragón, primera entidad aragonesa de crédito coopera...
+DEBUG 2025-04-21 14:21:34,447 linkedin_scraper Habilidades: ['rest']
+DEBUG 2025-04-21 14:21:34,453 linkedin_scraper Texto de fecha crudo: 'hace 2 días'
+DEBUG 2025-04-21 14:21:34,454 linkedin_scraper Fecha: 2025-04-19
+DEBUG 2025-04-21 14:21:34,509 linkedin_scraper Salario: No especificado
+INFO 2025-04-21 14:21:34,518 linkedin_scraper Guardado en JobOffer: Programa de Prácticas Remuneradas 2025 - Red de Oficinas (Zaragoza, Huesca, La Rioja y Lleida) (nueva)
+INFO 2025-04-21 14:21:34,524 linkedin_scraper Actualizado MarketTrend: 1 habilidades
+INFO 2025-04-21 14:21:39,524 linkedin_scraper Parseando detalle: https://www.linkedin.com/jobs/view/4210710435/
+DEBUG 2025-04-21 14:21:51,870 linkedin_scraper HTML de detalle guardado en 'job_detail_4210710435.html'.
+DEBUG 2025-04-21 14:21:52,089 linkedin_scraper Título: Mozo de almacén
+DEBUG 2025-04-21 14:21:52,095 linkedin_scraper Empresa: GRUPO INSTALVALEX LOGISTIC SL
+DEBUG 2025-04-21 14:21:52,099 linkedin_scraper Ubicación: Foronda, País Vasco / Euskadi, España (Presencial)
+DEBUG 2025-04-21 14:21:52,104 linkedin_scraper Descripción: Acerca del empleoGanas de trabajar, trabajar en equipo, y que sepa llevar carretilla elevadora...
+DEBUG 2025-04-21 14:21:52,115 linkedin_scraper Habilidades: []
+DEBUG 2025-04-21 14:21:52,118 linkedin_scraper Texto de fecha crudo: 'hace 1 semana'
+DEBUG 2025-04-21 14:21:52,118 linkedin_scraper Fecha: 2025-04-14
+DEBUG 2025-04-21 14:21:52,144 linkedin_scraper Salario: No especificado
+INFO 2025-04-21 14:21:52,150 linkedin_scraper Guardado en JobOffer: Mozo de almacén (actualizada)
+INFO 2025-04-21 14:21:52,156 linkedin_scraper Actualizado MarketTrend: 0 habilidades
+INFO 2025-04-21 14:21:57,157 linkedin_scraper Parseando detalle: https://www.linkedin.com/jobs/view/4210710435/
+DEBUG 2025-04-21 14:22:09,500 linkedin_scraper HTML de detalle guardado en 'job_detail_4210710435.html'.
+DEBUG 2025-04-21 14:22:09,705 linkedin_scraper Título: Mozo de almacén
+DEBUG 2025-04-21 14:22:09,712 linkedin_scraper Empresa: GRUPO INSTALVALEX LOGISTIC SL
+DEBUG 2025-04-21 14:22:09,716 linkedin_scraper Ubicación: Foronda, País Vasco / Euskadi, España (Presencial)
+DEBUG 2025-04-21 14:22:09,718 linkedin_scraper Descripción: Acerca del empleoGanas de trabajar, trabajar en equipo, y que sepa llevar carretilla elevadora...
+DEBUG 2025-04-21 14:22:09,728 linkedin_scraper Habilidades: []
+DEBUG 2025-04-21 14:22:09,730 linkedin_scraper Texto de fecha crudo: 'hace 1 semana'
+DEBUG 2025-04-21 14:22:09,731 linkedin_scraper Fecha: 2025-04-14
+DEBUG 2025-04-21 14:22:09,752 linkedin_scraper Salario: No especificado
+INFO 2025-04-21 14:22:09,757 linkedin_scraper Guardado en JobOffer: Mozo de almacén (actualizada)
+INFO 2025-04-21 14:22:09,761 linkedin_scraper Actualizado MarketTrend: 0 habilidades
+INFO 2025-04-21 14:22:14,762 linkedin_scraper Parseando detalle: https://www.linkedin.com/jobs/view/4210710435/
+DEBUG 2025-04-21 14:22:27,228 linkedin_scraper HTML de detalle guardado en 'job_detail_4210710435.html'.
+DEBUG 2025-04-21 14:22:27,438 linkedin_scraper Título: Mozo de almacén
+DEBUG 2025-04-21 14:22:27,446 linkedin_scraper Empresa: GRUPO INSTALVALEX LOGISTIC SL
+DEBUG 2025-04-21 14:22:27,450 linkedin_scraper Ubicación: Foronda, País Vasco / Euskadi, España (Presencial)
+DEBUG 2025-04-21 14:22:27,452 linkedin_scraper Descripción: Acerca del empleoGanas de trabajar, trabajar en equipo, y que sepa llevar carretilla elevadora...
+DEBUG 2025-04-21 14:22:27,463 linkedin_scraper Habilidades: []
+DEBUG 2025-04-21 14:22:27,466 linkedin_scraper Texto de fecha crudo: 'hace 1 semana'
+DEBUG 2025-04-21 14:22:27,466 linkedin_scraper Fecha: 2025-04-14
+DEBUG 2025-04-21 14:22:27,491 linkedin_scraper Salario: No especificado
+INFO 2025-04-21 14:22:27,497 linkedin_scraper Guardado en JobOffer: Mozo de almacén (actualizada)
+INFO 2025-04-21 14:22:27,500 linkedin_scraper Actualizado MarketTrend: 0 habilidades
+INFO 2025-04-21 14:22:32,502 linkedin_scraper Total ofertas extraídas: 10
+INFO 2025-04-21 14:22:34,776 linkedin_scraper Navegador cerrado correctamente.
+INFO 2025-04-21 14:22:34,777 views LinkedIn: 10 ofertas obtenidas para 'python, java'
+INFO 2025-04-21 14:22:34,778 views Resultado: Se procesaron 27 ofertas exitosamente.

@@ -91,18 +91,151 @@
 
         <!-- Botones -->
         <div class="d-flex justify-content-center gap-3">
-          <a href="?refresh=true" class="btn btn-primary btn-lg">Actualizar Datos</a>
+          <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#scrapeModal">Actualizar Datos</button>
           <a href="{% url 'export_skills_report' %}" class="btn btn-secondary btn-lg">Exportar Reporte</a>
           <a href="{% url 'job_offer_list' %}" class="btn btn-success btn-lg">Ver Todas las Ofertas</a>
         </div>
       </div>
     </div>
   </div>
-  
-  <!-- Scripts para gráficos -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Modal para Scraping -->
+  <div class="modal fade" id="scrapeModal" tabindex="-1" aria-labelledby="scrapeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="scrapeModalLabel">Actualizar Ofertas de Empleo</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="scrapeForm">
+            <div class="mb-3">
+              <label for="keywords" class="form-label">Palabras Clave (habilidades o términos de búsqueda)</label>
+              <select id="keywords" name="keywords" class="form-select" multiple="multiple" style="width: 100%;">
+                <!-- Opciones cargadas dinámicamente vía AJAX -->
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="location" class="form-label">Ubicación</label>
+              <input type="text" class="form-control" id="location" name="location" value="España" placeholder="Ej: Madrid, Barcelona, España">
+            </div>
+            <div class="mb-3">
+              <label for="max_offers" class="form-label">Máximo de Ofertas por Fuente</label>
+              <input type="number" class="form-control" id="max_offers" name="max_offers" value="30" min="1" max="50">
+            </div>
+          </form>
+          <div id="scrapeStatus" class="mt-3"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-primary" id="runScrapeBtn">Ejecutar Búsqueda</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estilos y Scripts -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
   <script>
     document.addEventListener('DOMContentLoaded', function () {
+      // Configurar CSRF para todas las solicitudes AJAX
+      function getCsrfToken() {
+        return '{{ csrf_token }}';
+      }
+
+      // Inicializar Select2 para autocompletado
+      $('#keywords').select2({
+        placeholder: 'Escribe habilidades o términos (ej: Python, Java)',
+        allowClear: true,
+        tags: true,
+        minimumInputLength: 2,
+        ajax: {
+          url: '{% url "autocomplete_skills" %}',
+          dataType: 'json',
+          delay: 250,
+          data: function (params) {
+            return {
+              q: params.term
+            };
+          },
+          processResults: function (data) {
+            return {
+              results: data.map(function (item) {
+                return {
+                  id: item,
+                  text: item
+                };
+              })
+            };
+          },
+          cache: true
+        }
+      });
+
+      // Manejar el botón de ejecutar scraping
+      $('#runScrapeBtn').click(function () {
+        const keywords = $('#keywords').val() || [];
+        const location = $('#location').val().trim() || 'España';
+        const maxOffersInput = $('#max_offers').val();
+        const max_offers = isNaN(parseInt(maxOffersInput)) ? 30 : parseInt(maxOffersInput);
+
+        // Validar entradas
+        if (!keywords.length) {
+          $('#scrapeStatus').html('<div class="alert alert-warning">Por favor, selecciona al menos una palabra clave.</div>');
+          return;
+        }
+        if (!location) {
+          $('#scrapeStatus').html('<div class="alert alert-warning">Por favor, ingresa una ubicación válida.</div>');
+          return;
+        }
+        if (max_offers < 1 || max_offers > 50) {
+          $('#scrapeStatus').html('<div class="alert alert-warning">El número de ofertas debe estar entre 1 y 50.</div>');
+          return;
+        }
+
+        const requestBody = {
+          keywords: keywords,
+          location: location,
+          max_offers: max_offers
+        };
+        console.log('Enviando solicitud:', requestBody);
+        console.log('Cuerpo JSON:', JSON.stringify(requestBody));
+
+        $('#runScrapeBtn').prop('disabled', true);
+        $('#scrapeStatus').html('<div class="alert alert-info">Buscando ofertas, por favor espera...</div>');
+
+        fetch('{% url "run_scraping" %}', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCsrfToken()
+          },
+          body: JSON.stringify(requestBody)
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          $('#scrapeStatus').html('<div class="alert alert-success">' + (data.message || 'Scraping completado') + '</div>');
+          setTimeout(function () {
+            window.location.reload();
+          }, 2000);
+        })
+        .catch(error => {
+          console.error('Error en scraping:', error);
+          $('#scrapeStatus').html('<div class="alert alert-danger">Error al ejecutar la búsqueda: ' + error.message + '</div>');
+          $('#runScrapeBtn').prop('disabled', false);
+        });
+      });
+
       // Gráfico de Habilidades Generales
       const skillsCtx = document.getElementById('skillsChart').getContext('2d');
       new Chart(skillsCtx, {
@@ -126,53 +259,71 @@
       });
 
       // Gráfico de Habilidades por Región
+      const regionSkills = [{% for region in skills_by_region %}{ 
+        location: '{{ region.location|default:"Sin región"|escapejs }}',
+        skills: [{% for skill in region.skills %}{ name: '{{ skill.required_skills__name|escapejs }}', count: {{ skill.count }} },{% endfor %}]
+      },{% endfor %}];
+      const regionLabels = regionSkills.map(r => r.location);
+      const regionDatasets = [];
+      const skillNames = [...new Set(regionSkills.flatMap(r => r.skills.map(s => s.name)))];
+      skillNames.forEach((skillName, index) => {
+        regionDatasets.push({
+          label: skillName,
+          data: regionSkills.map(r => {
+            const skill = r.skills.find(s => s.name === skillName);
+            return skill ? skill.count : 0;
+          }),
+          backgroundColor: `rgba(${index * 50 % 255}, 192, 192, 0.2)`,
+          borderColor: `rgba(${index * 50 % 255}, 192, 192, 1)`,
+          borderWidth: 1
+        });
+      });
       const regionCtx = document.getElementById('regionSkillsChart').getContext('2d');
       new Chart(regionCtx, {
         type: 'bar',
         data: {
-          labels: [{% for region in skills_by_region %}'{{ region.location|default:"Sin región"|escapejs }}',{% endfor %}],
-          datasets: [
-            {% for region in skills_by_region %}
-              {
-                label: '{{ region.location|default:"Sin región"|escapejs }}',
-                data: [{% for skill in region.skills %}{{ skill.count }},{% endfor %}],
-                backgroundColor: 'rgba({{ forloop.counter0|add:50 }}, 192, 192, 0.2)',
-                borderColor: 'rgba({{ forloop.counter0|add:50 }}, 192, 192, 1)',
-                borderWidth: 1
-              },
-            {% endfor %}
-          ]
+          labels: regionLabels,
+          datasets: regionDatasets
         },
         options: {
           scales: {
             y: { beginAtZero: true, title: { display: true, text: 'Número de Ofertas' } },
-            x: { title: { display: true, text: 'Habilidades' } }
+            x: { title: { display: true, text: 'Región' } }
           }
         }
       });
 
       // Gráfico de Habilidades por Fuente
+      const sourceSkills = [{% for source in skills_by_source %}{ 
+        source: '{{ source.source__name|default:"Sin fuente"|escapejs }}',
+        skills: [{% for skill in source.skills %}{ name: '{{ skill.required_skills__name|escapejs }}', count: {{ skill.count }} },{% endfor %}]
+      },{% endfor %}];
+      const sourceLabels = sourceSkills.map(s => s.source);
+      const sourceDatasets = [];
+      const sourceSkillNames = [...new Set(sourceSkills.flatMap(s => s.skills.map(sk => sk.name)))];
+      sourceSkillNames.forEach((skillName, index) => {
+        sourceDatasets.push({
+          label: skillName,
+          data: sourceSkills.map(s => {
+            const skill = s.skills.find(sk => sk.name === skillName);
+            return skill ? skill.count : 0;
+          }),
+          backgroundColor: `rgba(${index * 50 % 255}, 192, 192, 0.2)`,
+          borderColor: `rgba(${index * 50 % 255}, 192, 192, 1)`,
+          borderWidth: 1
+        });
+      });
       const sourceCtx = document.getElementById('sourceSkillsChart').getContext('2d');
       new Chart(sourceCtx, {
         type: 'bar',
         data: {
-          labels: [{% for source in skills_by_source %}'{{ source.source__name|default:"Sin fuente"|escapejs }}',{% endfor %}],
-          datasets: [
-            {% for source in skills_by_source %}
-              {
-                label: '{{ source.source__name|default:"Sin fuente"|escapejs }}',
-                data: [{% for skill in source.skills %}{{ skill.count }},{% endfor %}],
-                backgroundColor: 'rgba({{ forloop.counter0|add:100 }}, 192, 192, 0.2)',
-                borderColor: 'rgba({{ forloop.counter0|add:100 }}, 192, 192, 1)',
-                borderWidth: 1
-              },
-            {% endfor %}
-          ]
+          labels: sourceLabels,
+          datasets: sourceDatasets
         },
         options: {
           scales: {
             y: { beginAtZero: true, title: { display: true, text: 'Número de Ofertas' } },
-            x: { title: { display: true, text: 'Habilidades' } }
+            x: { title: { display: true, text: 'Fuente' } }
           }
         }
       });

@@ -1,47 +1,24 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Count, Q  # Añadimos Count
-from market_analysis.models import JobOffer, JobSource
+from django.db.models import Count, Q
+from django.http import JsonResponse, HttpResponse
+from market_analysis.models import JobOffer, JobSource, MarketTrend
 from users.models import Skill
 from .scraping.tecnoempleo_scraper import TecnoempleoScraper
-from .scraping.linkedin_scraper import LinkedinScraper
 from .scraping.infojobs_scraper import InfojobsScraper
+from .scraping.linkedin_scraper import LinkedinScraper
 from ai_engine.logic.predictions import get_future_skills_predictions
 from django.conf import settings
-from django.http import HttpResponse
 import matplotlib.pyplot as plt
 import io
+import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 @login_required
 def market_dashboard(request):
-    if request.GET.get('refresh', False):
-        try:
-            infojobs_scraper = InfojobsScraper()
-            infojobs_offers = infojobs_scraper.run(query="desarrollador", location="España", max_offers=50)
-            messages.success(request, f"Se scrapearon {len(infojobs_offers)} ofertas de InfoJobs.")
-        except Exception as e:
-            messages.error(request, f"Error al scrapear InfoJobs: {e}")
-
-        try:
-            tecnoempleo_scraper = TecnoempleoScraper()
-            tecnoempleo_offers = tecnoempleo_scraper.run(query="desarrollador", location="Madrid", max_offers=50)
-            messages.success(request, f"Se scrapearon {len(tecnoempleo_offers)} ofertas de Tecnoempleo.")
-        except Exception as e:
-            messages.error(request, f"Error al scrapear Tecnoempleo: {e}")
-
-        linkedin_username = getattr(settings, 'LINKEDIN_USERNAME', None)
-        linkedin_password = getattr(settings, 'LINKEDIN_PASSWORD', None)
-        if linkedin_username and linkedin_password:
-            try:
-                linkedin_scraper = LinkedinScraper()
-                linkedin_offers = linkedin_scraper.run(query="desarrollador", location="España", max_offers=50)
-                messages.success(request, f"Se scrapearon {len(linkedin_offers)} ofertas de LinkedIn.")
-            except Exception as e:
-                messages.error(request, f"Error al scrapear LinkedIn: {e}")
-        else:
-            messages.warning(request, "Credenciales de LinkedIn no configuradas en settings.py")
-
     # Estadísticas generales
     total_offers = JobOffer.objects.count()
     active_offers = JobOffer.objects.filter(is_active=True).count()
@@ -162,3 +139,127 @@ def export_skills_report(request):
     response = HttpResponse(buf, content_type='image/png')
     response['Content-Disposition'] = 'attachment; filename="skills_report.png"'
     return response
+
+@login_required
+def autocomplete_skills(request):
+    query = request.GET.get('q', '').strip()
+    if len(query) < 2:
+        return JsonResponse([], safe=False)
+
+    # Buscar habilidades en Skill
+    skill_matches = Skill.objects.filter(name__icontains=query).values_list('name', flat=True)
+
+    # Buscar en tendencias de habilidades
+    trend_matches = []
+    skill_trends = get_future_skills_predictions()
+    for skill in skill_trends.keys():
+        if query.lower() in skill.lower():
+            trend_matches.append(skill)
+
+    # Combinar y eliminar duplicados
+    results = list(set(list(skill_matches) + trend_matches))[:10]
+    return JsonResponse(results, safe=False)
+
+@login_required
+def run_scraping(request):
+    logger.info("Iniciando run_scraping")
+    if request.method != 'POST':
+        logger.error("Método no permitido: %s", request.method)
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+    try:
+        # Loguear el contenido crudo de request.body para depuración
+        logger.debug("Contenido de request.body: %s", request.body)
+        
+        # Manejar el caso de cuerpo vacío
+        if not request.body:
+            logger.error("Cuerpo de la solicitud vacío")
+            return JsonResponse({'error': 'Cuerpo de la solicitud vacío'}, status=400)
+
+        # Intentar parsear como JSON primero
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+        except json.JSONDecodeError:
+            # Si falla, intentar procesar como form-urlencoded
+            logger.warning("No es JSON, intentando parsear como form-urlencoded")
+            try:
+                # Parsear datos de formulario (application/x-www-form-urlencoded)
+                form_data = request.POST
+                keywords_str = form_data.get('keywords', '[]')
+                try:
+                    keywords = json.loads(keywords_str) if keywords_str else []
+                except json.JSONDecodeError:
+                    logger.error("El campo 'keywords' no es un JSON válido: %s", keywords_str)
+                    return JsonResponse({'error': 'El campo keywords debe ser un JSON válido'}, status=400)
+                data = {
+                    'keywords': keywords,
+                    'location': form_data.get('location', 'España'),
+                    'max_offers': int(form_data.get('max_offers', 30))
+                }
+            except Exception as e:
+                logger.error("Error al parsear datos de formulario: %s", str(e))
+                return JsonResponse({'error': f'Formato de datos inválido: {str(e)}'}, status=400)
+
+        # Validar los datos recibidos
+        keywords = data.get('keywords', [])
+        location = data.get('location', 'España')
+        max_offers = int(data.get('max_offers', 30))
+
+        if not keywords:
+            logger.error("No se proporcionaron palabras clave")
+            return JsonResponse({'error': 'Se requiere al menos una palabra clave'}, status=400)
+
+        logger.info("Parámetros recibidos: keywords=%s, location=%s, max_offers=%s", keywords, location, max_offers)
+
+        # Ejecutar scrapers
+        total_offers = 0
+        errors = []
+
+        # Tecnoempleo
+        try:
+            tecnoempleo_scraper = TecnoempleoScraper()
+            for keyword in keywords:
+                offers = tecnoempleo_scraper.run(query=keyword, location=location, max_offers=max_offers)
+                total_offers += len(offers)
+                logger.info("Tecnoempleo: %d ofertas obtenidas para '%s'", len(offers), keyword)
+        except Exception as e:
+            errors.append(f"Tecnoempleo: {str(e)}")
+            logger.error("Error en TecnoempleoScraper: %s", str(e))
+
+        # InfoJobs
+        try:
+            infojobs_scraper = InfojobsScraper()
+            for keyword in keywords:
+                offers = infojobs_scraper.run(query=keyword, location=location, max_offers=max_offers)
+                total_offers += len(offers)
+                logger.info("InfoJobs: %d ofertas obtenidas para '%s'", len(offers), keyword)
+        except Exception as e:
+            errors.append(f"InfoJobs: {str(e)}")
+            logger.error("Error en InfojobsScraper: %s", str(e))
+
+        # LinkedIn
+        linkedin_username = getattr(settings, 'LINKEDIN_USERNAME', None)
+        linkedin_password = getattr(settings, 'LINKEDIN_PASSWORD', None)
+        if linkedin_username and linkedin_password:
+            try:
+                linkedin_scraper = LinkedinScraper()
+                for keyword in keywords:
+                    offers = linkedin_scraper.run(query=keyword, location=location, max_offers=10)
+                    total_offers += len(offers)
+                    logger.info("LinkedIn: %d ofertas obtenidas para '%s'", len(offers), keyword)
+            except Exception as e:
+                errors.append(f"LinkedIn: {str(e)}")
+                logger.error("Error en LinkedinScraper: %s", str(e))
+        else:
+            errors.append("LinkedIn: Credenciales no configuradas")
+            logger.warning("Credenciales de LinkedIn no configuradas")
+
+        message = f"Se procesaron {total_offers} ofertas exitosamente."
+        if errors:
+            message += f" Advertencias: {'; '.join(errors)}"
+        logger.info("Resultado: %s", message)
+        return JsonResponse({'message': message})
+
+    except Exception as e:
+        logger.error("Error crítico en run_scraping: %s", str(e), exc_info=True)
+        return JsonResponse({'error': f'Error al procesar la solicitud: {str(e)}'}, status=500)

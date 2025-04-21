@@ -1,4 +1,3 @@
-# market_analysis/scraping/tecnoempleo_scraper.py
 import requests
 from bs4 import BeautifulSoup
 import time
@@ -8,23 +7,20 @@ import re
 import json
 import sys
 import os
+from .base_scraper import BaseScraper
 
 # Ajustar sys.path para incluir el directorio raíz del proyecto
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 if BASE_DIR not in sys.path:
     sys.path.append(BASE_DIR)
 
-class TecnoempleoScraper:
+class TecnoempleoScraper(BaseScraper):
     def __init__(self):
-        # Importar BaseScraper dentro de la clase después de django.setup()
-        from market_analysis.scraping.base_scraper import BaseScraper
-        self.base_scraper = BaseScraper
-        self.source_name = "Tecnoempleo"
-        self.base_url = "https://www.tecnoempleo.com"
-        self.headers = {
+        super().__init__(source_name="Tecnoempleo", base_url="https://www.tecnoempleo.com")
+        self.headers.update({
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
             'Accept-Language': 'es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3',
-        }
+        })
 
     def fetch_offers(self, query="desarrollador", location="Madrid", max_offers=50):
         print(f"Buscando ofertas en Tecnoempleo: query='{query}', location='{location}'")
@@ -81,7 +77,6 @@ class TecnoempleoScraper:
         return offer_urls
 
     def parse_offer_detail(self, url):
-        # Importar modelos y timezone dentro de la función
         from market_analysis.models import JobOffer, MarketTrend, JobSource
         from users.models import Skill
         from django.utils import timezone
@@ -132,7 +127,6 @@ class TecnoempleoScraper:
             data['description'] = json_data.get('description', 'No especificada')
             print(f"    -> Descripción: {data['description'][:100]}...")
 
-            # Habilidades
             skills_list = []
             valid_skills = {
                 'python', 'java', 'javascript', 'typescript', 'react', 'angular', 'vue', 'node.js', 'django', 'flask',
@@ -148,38 +142,35 @@ class TecnoempleoScraper:
                 'proyecto', 'nueva', 'urgente', 'buscamos', 'manager', 'docente', 'online', 'inteligencia', 'artificial'
             }
 
-            # Extraer desde HTML
             skills_tags = soup.select('ul.list-unstyled.mb-0 li a[href*="/ofertas-trabajo/"]')
             if skills_tags:
                 print(f"    -> Etiquetas de habilidades encontradas: {len(skills_tags)}")
                 for tag in skills_tags:
                     skill = tag.get_text(strip=True).lower()
-                    if skill == 'php7':  # Normalizar php7 a php desde HTML
+                    if skill == 'php7':
                         skill = 'php'
                     if skill in valid_skills and skill not in invalid_terms:
                         skills_list.append(skill)
                         print(f"    -> Habilidad añadida desde HTML: {skill}")
 
-            # Extraer desde descripción
             if data['description']:
                 text = data['description'].lower()
                 print(f"    -> Buscando habilidades en descripción...")
                 for skill in valid_skills:
-                    if skill == 'go':  # Verificación estricta para "go"
+                    if skill == 'go':
                         if not re.search(r'\bgo\b|\bgolang\b', text):
                             continue
-                    if skill == 'php7':  # Normalizar php7 a php desde descripción
+                    if skill == 'php7':
                         skill = 'php'
                     if skill in text and skill not in invalid_terms and skill not in skills_list:
                         skills_list.append(skill)
                         print(f"    -> Habilidad añadida desde descripción: {skill}")
 
-            # Extraer desde la URL con normalización
             url_skills = url.split('/')[-2].replace('chat-gpt', 'chatgpt').split('-')
             print(f"    -> Buscando habilidades en URL: {url_skills}")
             for skill in url_skills:
                 skill = skill.lower()
-                if skill == 'php7':  # Normalizar php7 a php desde URL
+                if skill == 'php7':
                     skill = 'php'
                 if skill in valid_skills and skill not in invalid_terms and skill not in skills_list:
                     skills_list.append(skill)
@@ -188,7 +179,7 @@ class TecnoempleoScraper:
             print(f"    -> Habilidades crudas extraídas: {skills_list}")
             skill_objects = []
             for skill_name in set(skills_list):
-                if len(skill_name) > 2:  # Evitar términos cortos
+                if len(skill_name) > 2:
                     skill_obj, _ = Skill.objects.get_or_create(name=skill_name)
                     skill_objects.append(skill_obj)
             print(f"    -> Habilidades finales: {[skill.name for skill in skill_objects]}")
@@ -291,7 +282,7 @@ class TecnoempleoScraper:
 if __name__ == "__main__":
     import django
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'main_project.settings')
-    django.setup()  # Inicializa Django antes de cualquier importación de modelos
+    django.setup()
     scraper = TecnoempleoScraper()
     offers = scraper.run(query="desarrollador", location="Madrid", max_offers=30)
     print(f"Total ofertas extraídas: {len(offers)}")

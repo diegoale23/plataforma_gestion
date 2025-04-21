@@ -42,10 +42,8 @@ class InfojobsScraper(BaseScraper):
             self.captcha_solver = None
 
     def parse_relative_date(self, text):
-        """Convierte un texto como 'Hace 6d', 'Hace 19h' o '08 abr' en una fecha absoluta."""
         today = timezone.now().date()
         try:
-            # Formato relativo: 'Hace Xd' o 'Hace Xh'
             match = re.match(r'Hace (\d+)([dh])', text, re.IGNORECASE)
             if match:
                 value, unit = int(match.group(1)), match.group(2).lower()
@@ -54,7 +52,6 @@ class InfojobsScraper(BaseScraper):
                 elif unit == 'h':
                     return today if value < 24 else today - timedelta(days=1)
             
-            # Formato 'DD MMM' (e.g., '08 abr')
             match = re.match(r'(\d{1,2})\s*(ene|feb|mar|abr|may|jun|jul|ago|sep|oct|nov|dic)', text, re.IGNORECASE)
             if match:
                 day, month_str = int(match.group(1)), match.group(2).lower()
@@ -87,7 +84,6 @@ class InfojobsScraper(BaseScraper):
         search_url = f"{self.base_url}/jobsearch/search-results/list.xhtml?keyword={query}&provinceIds={province_id}&normalizedLocation={normalized_location}"
 
         chrome_options = Options()
-        chrome_options.add_experimental_option("detach", True)
         chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
         chrome_options.add_argument(f'user-agent={self.headers["User-Agent"]}')
         chrome_options.add_argument('--disable-blink-features=AutomationControlled')
@@ -367,7 +363,11 @@ class InfojobsScraper(BaseScraper):
                     f.write(driver.page_source)
 
         finally:
-            pass
+            try:
+                driver.quit()
+                logger.info("Navegador cerrado correctamente.")
+            except Exception as e:
+                logger.error(f"Error al cerrar el navegador: {e}")
 
         return offers[:max_offers]
 
@@ -377,54 +377,58 @@ class InfojobsScraper(BaseScraper):
 
     def run(self, query="desarrollador", location="España", max_offers=50):
         logger.info(f"Iniciando scraping de InfoJobs: query='{query}', location='{location}', max_offers={max_offers}")
-        source, _ = JobSource.objects.get_or_create(
-            name=self.source_name,
-            defaults={'url': self.base_url}
-        )
+        try:
+            source, _ = JobSource.objects.get_or_create(
+                name=self.source_name,
+                defaults={'url': self.base_url}
+            )
 
-        source.last_scraped = timezone.now()
-        source.save()
+            source.last_scraped = timezone.now()
+            source.save()
 
-        offers_data = self.fetch_offers(query, location, max_offers)
-        results = []
+            offers_data = self.fetch_offers(query, location, max_offers)
+            results = []
 
-        for data in offers_data:
-            offer_details = self.parse_offer_detail(data)
-            if not offer_details or not offer_details.get('url'):
-                logger.debug(f"Oferta ignorada por falta de URL: {offer_details.get('title', 'Sin título')}")
-                continue
+            for data in offers_data:
+                offer_details = self.parse_offer_detail(data)
+                if not offer_details or not offer_details.get('url'):
+                    logger.debug(f"Oferta ignorada por falta de URL: {offer_details.get('title', 'Sin título')}")
+                    continue
 
-            try:
-                defaults = {
-                    'title': offer_details.get('title', 'Sin título')[:255],
-                    'company': offer_details.get('company', 'Sin compañía')[:255],
-                    'location': offer_details.get('location', 'Sin ubicación')[:255],
-                    'description': offer_details.get('description', '')[:2000],
-                    'salary_range': offer_details.get('salary_range')[:255] if offer_details.get('salary_range') else None,
-                    'publication_date': offer_details.get('publication_date'),
-                    'source': source,
-                    'applicants_count': offer_details.get('applicants_count', None),
-                    'raw_data': offer_details.get('raw_data', {}),
-                    'is_active': True
-                }
-                offer, created = JobOffer.objects.get_or_create(
-                    url=offer_details['url'],
-                    defaults=defaults
-                )
+                try:
+                    defaults = {
+                        'title': offer_details.get('title', 'Sin título')[:255],
+                        'company': offer_details.get('company', 'Sin compañía')[:255],
+                        'location': offer_details.get('location', 'Sin ubicación')[:255],
+                        'description': offer_details.get('description', '')[:2000],
+                        'salary_range': offer_details.get('salary_range')[:255] if offer_details.get('salary_range') else None,
+                        'publication_date': offer_details.get('publication_date'),
+                        'source': source,
+                        'applicants_count': offer_details.get('applicants_count', None),
+                        'raw_data': offer_details.get('raw_data', {}),
+                        'is_active': True
+                    }
+                    offer, created = JobOffer.objects.get_or_create(
+                        url=offer_details['url'],
+                        defaults=defaults
+                    )
 
-                if created:
-                    logger.info(f"Nueva oferta guardada: {offer.title}")
-                    for skill_name in offer_details.get('skills', []):
-                        if skill_name:
-                            skill, _ = Skill.objects.get_or_create(name=skill_name.strip())
-                            offer.required_skills.add(skill)
-                else:
-                    logger.debug(f"Oferta ya existente: {offer.title}")
+                    if created:
+                        logger.info(f"Nueva oferta guardada: {offer.title}")
+                        for skill_name in offer_details.get('skills', []):
+                            if skill_name:
+                                skill, _ = Skill.objects.get_or_create(name=skill_name.strip())
+                                offer.required_skills.add(skill)
+                    else:
+                        logger.debug(f"Oferta ya existente: {offer.title}")
 
-                results.append(offer)
+                    results.append(offer)
 
-            except Exception as e:
-                logger.error(f"Error al guardar oferta {offer_details.get('url')}: {e}")
+                except Exception as e:
+                    logger.error(f"Error al guardar oferta {offer_details.get('url')}: {e}")
 
-        logger.info(f"Scraping de InfoJobs completado: {len(results)} ofertas procesadas.")
-        return results
+            logger.info(f"Scraping de InfoJobs completado: {len(results)} ofertas procesadas.")
+            return results
+        except Exception as e:
+            logger.error(f"Error crítico en InfojobsScraper: {e}")
+            return []
