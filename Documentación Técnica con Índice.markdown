@@ -1,11 +1,50 @@
 # Documentación Técnica: Plataforma Gestión
 
+## Índice
+
+1. Arquitectura del Sistema
+   - Descripción General
+   - Arquitectura de la Aplicación Web
+   - Arquitectura de la Aplicación de Escritorio
+   - Componentes Compartidos
+   - Flujo de Interacción
+2. Diagrama Entidad-Relación (ER)
+   - Entidades y Atributos
+   - Relaciones
+   - Diagrama ER (Textual)
+3. Componentes Modulares e Interacciones
+   - Módulos
+   - Interacciones entre Componentes
+4. Modelo de IA e Implementación
+   - Descripción del Modelo de IA
+   - Detalles de Implementación
+   - Integración
+5. Instrucciones de Instalación y Configuración
+   - Prerrequisitos
+   - Configuración de la Aplicación Web
+   - Configuración de la Aplicación de Escritorio
+   - Solución de Problemas
+6. Estructura del Proyecto
+   - Descripción
+7. Descripción de la Funcionalidad
+   - Funcionalidades Principales
+   - Web vs. Escritorio
+8. Manual de Usuario
+   - Aplicación Web
+   - Aplicación de Escritorio
+9. Análisis de Requisitos
+   - Requisitos Funcionales
+   - Requisitos No Funcionales
+   - Restricciones
+
 ## 1. Arquitectura del Sistema
 
 ### Descripción General
+
 El sistema es una plataforma híbrida que incluye una **aplicación web** desarrollada con Django y una **aplicación de escritorio** construida con Tkinter. Ambos componentes comparten la misma lógica de backend y base de datos, garantizando consistencia en la gestión de datos y reglas de negocio. La arquitectura sigue un enfoque modular y en capas para facilitar la escalabilidad y el mantenimiento.
 
 ### Arquitectura de la Aplicación Web
+
 - **Framework**: Django 4.x (framework web basado en Python).
 - **Componentes**:
   - **Frontend**: Plantillas HTML con Bootstrap para diseño responsivo, mejoradas con JavaScript para interacciones dinámicas.
@@ -16,6 +55,7 @@ El sistema es una plataforma híbrida que incluye una **aplicación web** desarr
 - **Despliegue**: Normalmente desplegado en un servidor WSGI (por ejemplo, Gunicorn) con Nginx como proxy inverso.
 
 ### Arquitectura de la Aplicación de Escritorio
+
 - **Framework**: Tkinter (biblioteca estándar de GUI de Python).
 - **Componentes**:
   - **Interfaz Gráfica**: Interfaz basada en Tkinter con estilos personalizados para botones, etiquetas y widgets Treeview.
@@ -24,11 +64,13 @@ El sistema es una plataforma híbrida que incluye una **aplicación web** desarr
 - **Ejecución**: Se ejecuta como un script Python independiente (`main.py`) con la configuración de Django para acceso a la base de datos.
 
 ### Componentes Compartidos
+
 - **Base de Datos**: Una única base de datos PostgreSQL sirve a ambas aplicaciones, asegurando consistencia de datos.
 - **Autenticación**: El sistema de autenticación de Django se utiliza para ambas aplicaciones, con control de acceso basado en roles.
 - **Lógica de Negocio**: Encapsulada en modelos y vistas de Django, reutilizable en ambas aplicaciones.
 
 ### Flujo de Interacción
+
 1. **Interacción del Usuario**:
    - Web: Los usuarios interactúan a través del navegador, enviando solicitudes HTTP a las vistas de Django.
    - Escritorio: Los usuarios interactúan a través de la interfaz Tkinter, activando llamadas al backend mediante modelos de Django.
@@ -43,6 +85,7 @@ El sistema es una plataforma híbrida que incluye una **aplicación web** desarr
 A continuación, se presenta una representación textual del diagrama ER de la base de datos, describiendo entidades, atributos y relaciones. Un diagrama visual puede crearse con herramientas como DBeaver o Lucidchart basado en esta descripción.
 
 ### Entidades y Atributos
+
 - **Usuario** (Django `auth_user`):
   - `id` (PK), `username`, `email`, `password`, `is_active`
 - **PerfilUsuario**:
@@ -67,6 +110,7 @@ A continuación, se presenta una representación textual del diagrama ER de la b
   - `id` (PK), `analysis_date`, `period`, `region`, `industry`, `skill_trends` (JSON), `source_description`, `created_at`
 
 ### Relaciones
+
 - **Usuario ↔ PerfilUsuario**: Uno a Uno (cada usuario tiene un perfil).
 - **PerfilUsuario ↔ Rol**: Muchos a Uno (varios perfiles pueden tener el mismo rol).
 - **PerfilUsuario ↔ Habilidad**: Muchos a Muchos (los usuarios pueden tener múltiples habilidades).
@@ -80,6 +124,7 @@ A continuación, se presenta una representación textual del diagrama ER de la b
 - **TendenciaMercado**: Sin relaciones directas (almacena datos agregados).
 
 ### Diagrama ER (Textual)
+
 ```
 [Usuario] --1:1--> [PerfilUsuario] --M:1--> [Rol] --M:M--> [Permiso]
 [PerfilUsuario] --M:M--> [Habilidad]
@@ -95,7 +140,9 @@ A continuación, se presenta una representación textual del diagrama ER de la b
 ## 3. Componentes Modulares e Interacciones
 
 ### Módulos
+
 1. **App de Usuarios**:
+
    - **Propósito**: Gestiona autenticación, perfiles, roles y habilidades de usuarios.
    - **Componentes**:
      - Modelos: `PerfilUsuario`, `Rol`, `Habilidad`
@@ -104,6 +151,7 @@ A continuación, se presenta una representación textual del diagrama ER de la b
    - **Interacciones**: Proporciona autenticación y control de acceso basado en roles para otros módulos.
 
 2. **App de Proyectos**:
+
    - **Propósito**: Gestiona proyectos y tareas.
    - **Componentes**:
      - Modelos: `Proyecto`, `Tarea`
@@ -112,6 +160,7 @@ A continuación, se presenta una representación textual del diagrama ER de la b
    - **Interacciones**: Se integra con la app de Usuarios para asignaciones de tareas y requisitos de habilidades.
 
 3. **App de Análisis de Mercado**:
+
    - **Propósito**: Realiza scraping de ofertas de empleo y analiza tendencias de mercado.
    - **Componentes**:
      - Modelos: `FuenteEmpleo`, `OfertaEmpleo`, `TendenciaMercado`
@@ -120,12 +169,14 @@ A continuación, se presenta una representación textual del diagrama ER de la b
    - **Interacciones**: Utiliza habilidades de la app de Usuarios para etiquetar ofertas, alimenta datos al motor de IA.
 
 4. **App de Motor de IA**:
+
    - **Propósito**: Proporciona predicciones de tendencias de habilidades y recomendaciones de tareas.
    - **Componentes**:
      - Lógica: `predictions.py` (tendencias de habilidades), `recommendations.py` (asignaciones de tareas)
    - **Interacciones**: Consume datos de OfertaEmpleo y Habilidad, proporciona recomendaciones a las apps de Usuarios y Proyectos.
 
 5. **App de Escritorio**:
+
    - **Propósito**: Proporciona una interfaz basada en Tkinter para las mismas funcionalidades que la app web.
    - **Componentes**:
      - `main.py`: Script principal con interfaz Tkinter
@@ -133,6 +184,7 @@ A continuación, se presenta una representación textual del diagrama ER de la b
    - **Interacciones**: Usa modelos de Django directamente, compartiendo la misma base de datos que la app web.
 
 ### Interacciones entre Componentes
+
 - **Autenticación**: La app de Usuarios autentica a los usuarios para ambas aplicaciones, almacenando datos de sesión en la base de datos.
 - **Flujo de Datos**:
   - Web: Solicitudes HTTP → Vistas de Django → Modelos → Base de Datos.
@@ -147,7 +199,9 @@ A continuación, se presenta una representación textual del diagrama ER de la b
 ## 4. Modelo de IA e Implementación
 
 ### Descripción del Modelo de IA
+
 El motor de IA proporciona dos funcionalidades principales:
+
 1. **Predicciones de Tendencias de Habilidades** (`get_future_skills_predictions`):
    - Predice la demanda futura de habilidades basada en datos de ofertas de empleo.
    - Implementado en `ai_engine/logic/predictions.py`.
@@ -156,6 +210,7 @@ El motor de IA proporciona dos funcionalidades principales:
    - Implementado en `ai_engine/logic/recommendations.py`.
 
 ### Detalles de Implementación
+
 - **Predicciones de Tendencias de Habilidades**:
   - **Fuente de Datos**: Agrega `OfertaEmpleo.required_skills` y `TendenciaMercado.skill_trends`.
   - **Algoritmo**: Análisis estadístico simple (por ejemplo, frecuencia de habilidades en ofertas recientes) con un mecanismo de puntuación.
@@ -168,6 +223,7 @@ El motor de IA proporciona dos funcionalidades principales:
   - **Uso**: Mostrado en el panel de usuario para colaboradores.
 
 ### Integración
+
 - **Web**: Las salidas de IA se renderizan en plantillas (`market_analysis/dashboard.html`, `users/dashboard.html`).
 - **Escritorio**: Las salidas de IA no están integradas directamente, pero pueden accederse mediante consultas a la base de datos en `main.py`.
 - **Escalabilidad**: El modelo de IA es ligero, pero puede extenderse con bibliotecas de aprendizaje automático (por ejemplo, scikit-learn) para predicciones más complejas.
@@ -175,6 +231,7 @@ El motor de IA proporciona dos funcionalidades principales:
 ## 5. Instrucciones de Instalación y Configuración
 
 ### Prerrequisitos
+
 - Python 3.8+
 - PostgreSQL (o SQLite para desarrollo)
 - Navegador Chrome (para scrapers de Selenium)
@@ -182,23 +239,29 @@ El motor de IA proporciona dos funcionalidades principales:
 - Credenciales de LinkedIn (para scraping de LinkedIn)
 
 ### Configuración de la Aplicación Web
+
 1. **Clonar el Repositorio**:
+
    ```bash
    git clone <url_repositorio>
    cd main_project
    ```
 
 2. **Crear un Entorno Virtual**:
+
    ```bash
    python -m venv venv
    source venv/bin/activate  # En Windows: venv\Scripts\activate
    ```
 
 3. **Instalar Dependencias**:
+
    ```bash
    pip install -r requirements.txt
    ```
+
    Ejemplo de `requirements.txt`:
+
    ```
    django>=4.0
    psycopg2-binary
@@ -210,8 +273,8 @@ El motor de IA proporciona dos funcionalidades principales:
    matplotlib
    ```
 
-4. **Configurar Variables de Entorno**:
-   Crear un archivo `.env` en la raíz del proyecto:
+4. **Configurar Variables de Entorno**: Crear un archivo `.env` en la raíz del proyecto:
+
    ```plaintext
    SECRET_KEY=tu_clave_secreta_django
    DATABASE_URL=postgresql://usuario:contraseña@localhost:5432/nombre_db
@@ -221,35 +284,42 @@ El motor de IA proporciona dos funcionalidades principales:
    ```
 
 5. **Configurar la Base de Datos**:
+
    ```bash
    python manage.py migrate
    ```
 
 6. **Crear un Superusuario**:
+
    ```bash
    python manage.py createsuperuser
    ```
 
 7. **Ejecutar el Servidor de Desarrollo**:
+
    ```bash
    python manage.py runserver
    ```
+
    Acceder en `http://localhost:8000`.
 
 ### Configuración de la Aplicación de Escritorio
-1. **Asegurar Dependencias de la App Web**:
-   Seguir los pasos de configuración de la aplicación web para instalar dependencias y configurar la base de datos.
+
+1. **Asegurar Dependencias de la App Web**: Seguir los pasos de configuración de la aplicación web para instalar dependencias y configurar la base de datos.
 
 2. **Ejecutar la App de Escritorio**:
+
    ```bash
    python desktop_app/main.py
    ```
 
 3. **Notas**:
+
    - La app de escritorio usa la misma base de datos que la app web.
    - Asegurarse de que el módulo de configuración de Django esté correctamente establecido en `main.py` (`DJANGO_SETTINGS_MODULE=main_project.settings`).
 
 ### Solución de Problemas
+
 - **Errores de Selenium**: Asegurarse de que Chrome y ChromeDriver estén instalados y sean compatibles.
 - **Problemas de Base de Datos**: Verificar que PostgreSQL esté en ejecución y que las credenciales sean correctas.
 - **Fallos de Scraping**: Comprobar el saldo de 2Captcha y las credenciales de LinkedIn.
@@ -296,6 +366,7 @@ main_project/
 ```
 
 ### Descripción
+
 - **ai_engine/**: Contiene la lógica de IA para predicciones y recomendaciones.
 - **desktop_app/**: Aplicación de escritorio basada en Tkinter.
 - **market_analysis/**: Gestiona el scraping de ofertas de empleo y el análisis de tendencias de mercado.
@@ -306,6 +377,7 @@ main_project/
 ## 7. Descripción de la Funcionalidad
 
 ### Funcionalidades Principales
+
 1. **Gestión de Usuarios**:
    - Registro, inicio de sesión y acceso basado en roles (Admin, Gerente, Colaborador).
    - Operaciones CRUD para usuarios (solo admin).
@@ -323,12 +395,14 @@ main_project/
    - Predecir la demanda futura de habilidades.
 
 ### Web vs. Escritorio
+
 - **Web**: Basada en navegador, responsiva, ideal para acceso remoto.
 - **Escritorio**: Independiente, optimizada para uso local, replica la funcionalidad web.
 
 ## 8. Manual de Usuario
 
 ### Aplicación Web
+
 1. **Inicio de Sesión**:
    - Navegar a `http://localhost:8000`.
    - Ingresar nombre de usuario y contraseña.
@@ -351,6 +425,7 @@ main_project/
    - Asignar roles a usuarios.
 
 ### Aplicación de Escritorio
+
 1. **Iniciar**:
    - Ejecutar `python desktop_app/main.py`.
 2. **Inicio de Sesión**:
@@ -373,6 +448,7 @@ main_project/
 ## 9. Análisis de Requisitos
 
 ### Requisitos Funcionales
+
 - **Gestión de Usuarios**:
   - Los usuarios pueden registrarse, iniciar sesión y gestionar perfiles.
   - Los administradores pueden gestionar todos los usuarios y asignar roles.
@@ -388,6 +464,7 @@ main_project/
   - El sistema recomienda tareas y predice la demanda de habilidades.
 
 ### Requisitos No Funcionales
+
 - **Rendimiento**: Soportar hasta 100 usuarios concurrentes; el scraping se completa en 5 minutos para 50 ofertas.
 - **Escalabilidad**: Soportar fuentes de empleo adicionales y modelos de IA.
 - **Seguridad**: Control de acceso basado en roles, autenticación segura.
@@ -395,6 +472,7 @@ main_project/
 - **Fiabilidad**: Gestionar errores de scraping con gracia, garantizar consistencia de datos.
 
 ### Restricciones
+
 - **Scraping**: Limitado por restricciones de los sitios web y desafíos CAPTCHA.
 - **LinkedIn**: Requiere credenciales válidas y riesgo de bloqueo de cuenta.
 - **Hardware**: La app de escritorio requiere instalación local de Python.
