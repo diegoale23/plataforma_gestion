@@ -1,0 +1,106 @@
+@startuml
+' Define styles
+skinparam classAttributeIconSize 0
+
+' Entities
+class Skill {
+    + id: Integer
+    + name: CharField
+}
+
+class Role {
+    + id: Integer
+    + name: CharField
+    + permissions: ManyToManyField
+}
+
+class UserProfile {
+    + id: Integer
+    + user: OneToOneField
+    + role: ForeignKey
+    + skills: ManyToManyField
+    + bio: TextField
+    + location: CharField
+}
+
+class Project {
+    + id: Integer
+    + name: CharField
+    + description: TextField
+    + manager: ForeignKey
+    + created_at: DateTimeField
+    + updated_at: DateTimeField
+}
+
+class Task {
+    + id: Integer
+    + project: ForeignKey
+    + title: CharField
+    + description: TextField
+    + status: CharField
+    + priority: IntegerField
+    + assigned_to: ManyToManyField
+    + required_skills: ManyToManyField
+    + deadline: DateField
+    + created_at: DateTimeField
+    + updated_at: DateTimeField
+}
+
+class JobSource {
+    + id: Integer
+    + name: CharField
+    + url: URLField
+    + last_scraped: DateTimeField
+}
+
+class JobOffer {
+    + id: Integer
+    + title: CharField
+    + company: CharField
+    + location: CharField
+    + description: TextField
+    + required_skills: ManyToManyField
+    + salary_range: CharField
+    + publication_date: DateField
+    + url: URLField
+    + source: ForeignKey
+    + applicants_count: IntegerField
+    + industry: CharField
+    + raw_data: JSONField
+    + scraped_at: DateTimeField
+    + updated_at: DateTimeField
+    + is_active: BooleanField
+}
+
+class MarketTrend {
+    + id: Integer
+    + analysis_date: DateField
+    + period: CharField
+    + region: CharField
+    + industry: CharField
+    + skill_trends: ManyToManyField
+    + job_offers: ManyToManyField
+    + source_description: CharField
+    + created_at: DateTimeField
+}
+
+' Relationships
+Skill "1" -- "0..*" UserProfile : skills
+Skill "1" -- "0..*" Task : required_skills
+Skill "1" -- "0..*" JobOffer : required_skills
+Skill "0..*" -- "0..*" MarketTrend : skill_trends
+
+Role "1" -- "0..*" UserProfile : role
+
+UserProfile "1" -- "1" User : user
+UserProfile "0..*" -- "1" Role : role
+
+Project "1" -- "0..*" Task : tasks
+User "1" -- "0..*" Project : manager
+User "1" -- "0..*" Task : assigned_to
+
+JobSource "1" -- "0..*" JobOffer : source
+
+JobOffer "0..*" -- "0..*" MarketTrend : job_offers
+
+@enduml
