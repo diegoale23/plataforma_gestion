@@ -1,3 +1,4 @@
+# desktop_app/main.py
 import os
 import sys
 import tkinter as tk
@@ -62,20 +63,20 @@ def open_main_menu():
     main_menu.state("zoomed")
     main_menu.configure(bg="#F0F0F0")
 
-    menu_bar = tk.Menu(main_menu, font=("Arial", 12))
+    menu_bar = tk.Menu(main_menu, font=("Arial", 12, "italic"))
     main_menu.config(menu=menu_bar)
 
-    file_menu = tk.Menu(menu_bar, tearoff=0, font=("Arial", 12))
+    file_menu = tk.Menu(menu_bar, tearoff=0, font=("Arial", 12,"italic"))
     file_menu.add_command(label="Cerrar Sesión", command=lambda: logout(main_menu))
     file_menu.add_separator()
     file_menu.add_command(label="Salir", command=main_menu.quit)
-    menu_bar.add_cascade(label="Archivo", menu=file_menu)
+    menu_bar.add_cascade(label="Archivo", menu=file_menu, font=("Arial", 12,"italic"))
 
     management_menu = tk.Menu(menu_bar, tearoff=0, font=("Arial", 12))
     management_menu.add_command(label="Gestión de Proyectos", command=open_project_management_window)
     management_menu.add_command(label="Ofertas de Empleo", command=open_job_offers_window)
     management_menu.add_command(label="Gestión de Usuarios", command=open_user_management_window)
-    menu_bar.add_cascade(label="Gestión", menu=management_menu)
+    menu_bar.add_cascade(label="Gestión", menu=management_menu, font=("Arial", 12, "italic"))
 
     content_frame = tk.Frame(main_menu, bg="#F0F0F0")
     content_frame.pack(expand=True, fill="both", padx=20, pady=20)

@@ -1,3 +1,4 @@
+# market_analysis/apps.py
 from django.apps import AppConfig
 
 

@@ -1,4 +1,5 @@
-from django.db import models
+# desktop_app/models.py
+'''from django.db import models
 from django.contrib.auth.models import User
 
 # Tabla: auth_group
@@ -64,4 +65,4 @@ class Task(models.Model):
     assigned_to = models.ManyToManyField(User, related_name='desktop_tasks', blank=True)
 
     def __str__(self):
-        return self.title
+        return self.title'''

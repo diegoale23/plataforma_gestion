@@ -1,3 +1,4 @@
+#main_project/settings.py
 import os
 from pathlib import Path
 from decouple import config

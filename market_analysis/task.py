@@ -14,7 +14,3 @@ def scrape_tecnoempleo():
     scraper = TecnoempleoScraper()
     scraper.run(query="desarrollador", location="Madrid", max_offers=50)
 
-'''@shared_task
-def scrape_infojobs():
-    scraper = InfojobsScraper()
-    scraper.run(query="desarrollador", location="España", max_offers=50)'''
