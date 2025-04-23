@@ -392,22 +392,50 @@ main_project/
    - Navegar a `http://localhost:8000`.
    - Ingresar nombre de usuario y contraseña.
    - Hacer clic en "Iniciar Sesión".
+
+   ![alt text](image.png)
+
 2. **Panel de Control**:
    - Ver contenido específico según el rol (por ejemplo, recomendaciones de tareas para Colaboradores).
    - Navegar a Proyectos, Ofertas de Empleo o Gestión de Usuarios (según rol).
+
+   ![alt text](image-1.png)
+
 3. **Gestión de Proyectos**:
    - Ir a `/projects/`.
    - Hacer clic en "Crear Proyecto" para agregar un nuevo proyecto.
    - Seleccionar un proyecto para ver tareas, agregar/editar tareas o asignar usuarios.
+
+   ![alt text](image-2.png)
+
+   ![alt text](image-4.png)
+
+   ![alt text](image-3.png)
+
+   ![alt text](image-5.png)
+   ![alt text](image-6.png)
+
 4. **Gestión de Ofertas de Empleo**:
    - Ir a `/market/offers/`.
    - Buscar ofertas por palabra clave.
    - Hacer clic en "Ejecutar Scraping" para obtener nuevas ofertas (solo admin).
    - Exportar informe de habilidades como PNG.
+
+   ![alt text](image-7.png)
+   ![alt text](image-8.png)
+   ![alt text](image-9.png)
+
+
 5. **Gestión de Usuarios** (Solo Admin):
    - Ir a `/users/manage/`.
    - Crear, actualizar o eliminar usuarios.
    - Asignar roles a usuarios.
+
+   ![alt text](image-10.png)
+
+   ![alt text](image-11.png)
+   ![alt text](image-12.png)
+   ![alt text](image-13.png)
 
 ### Aplicación de Escritorio
 
