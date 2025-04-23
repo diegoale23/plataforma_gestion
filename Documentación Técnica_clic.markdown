@@ -444,19 +444,47 @@ main_project/
 2. **Inicio de Sesión**:
    - Ingresar nombre de usuario y contraseña en la ventana de inicio de sesión.
    - Hacer clic en "Iniciar Sesión".
+
+   ![alt text](image-14.png)
+
 3. **Menú Principal**:
    - Ver mensaje de bienvenida y botones de navegación.
    - Hacer clic en "Gestión de Proyectos", "Ofertas de Empleo" o "Gestión de Usuarios".
+
+   ![alt text](image-15.png)
+
 4. **Gestión de Proyectos**:
    - Ver proyectos en un Treeview.
    - Seleccionar un proyecto para ver tareas.
    - Usar botones para crear/editar/eliminar proyectos o tareas.
+
+   ![alt text](image-16.png)
+
+   ![alt text](image-17.png)
+
+   ![alt text](image-18.png)
+
+   ![alt text](image-19.png)
+
+   ![alt text](image-20.png)
+
+   ![alt text](image-21.png)
+
 5. **Gestión de Ofertas de Empleo**:
    - Ver ofertas de empleo en un Treeview.
    - Crear/editar/eliminar ofertas manualmente.
+
+   ![alt text](image-22.png)
+   ![alt text](image-23.png)
+   ![alt text](image-24.png)
+
 6. **Gestión de Usuarios**:
    - Ver usuarios en un Treeview.
    - Crear/editar/eliminar usuarios.
+
+   ![alt text](image-25.png)
+   ![alt text](image-26.png)
+   ![alt text](image-27.png)
 
 ## Análisis de Requisitos
 
