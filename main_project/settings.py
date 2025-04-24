@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Clave secreta y modo debug
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=True, cast=bool)  # Cambiado a True por defecto para desarrollo
-
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # Hosts permitidos
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']  # Añadidos hosts comunes para desarrollo
 
@@ -20,11 +20,14 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.humanize',
     'django.contrib.staticfiles',
+    'crispy_forms',
     'users.apps.UsersConfig',
     'projects.apps.ProjectsConfig',
     'market_analysis.apps.MarketAnalysisConfig',
     'ai_engine.apps.AiEngineConfig',
+
     'desktop_app',
     'widget_tweaks',
 ]
